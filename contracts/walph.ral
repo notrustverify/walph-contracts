@@ -6,15 +6,13 @@ Abstract Contract Walph(
     ticketPrice: U256,
     attendeesStackTemplateId: ByteVec,
     attendeesKey: U256,
+    attendees: [Address;100],
     mut minTokenAmountToHold: U256,
     mut open: Bool,
     mut balance: U256,
-    //mut numAttendees: U256,
-    //mut attendees: [Address;100],
     mut lastWinner: Address
 ){
     
-
     event TicketBought(from: Address, amount: U256)
     event PoolOpen()
     event PoolClose()
@@ -31,6 +29,7 @@ Abstract Contract Walph(
         NotEnoughToken = 5
         PoolNotFull = 6
         InvalidAmount = 7
+        AttendeesAlreadyDeployed = 8
     }
 
     pub fn getPoolState() -> (Bool) {
@@ -46,19 +45,20 @@ Abstract Contract Walph(
     }
 
     pub fn initAttendeesStack() -> (){
-        setAttendeesStack(callerAddress!(), 1, poolOwner, callerAddress!(), 1, [callerAddress!()], 0)
+        setAttendeesStack(callerAddress!(),selfContractId!() , poolOwner, callerAddress!(), 1, attendees, 0)
     }
 
-    @using(preapprovedAssets = true, checkExternalCaller = true)
+    // Note for later: this could work but since the array have to initialized and then passed to the function it make no sense to use a subcontract. What I'm looking here is to be able to init without having to pass an array and then just use pop() and push() function
+    @using(preapprovedAssets = true, checkExternalCaller = false,assetsInContract = true )
     pub fn setAttendeesStack(caller: Address, key: U256,
         owner: Address,
         zeroAddress: Address,
         stackSize: U256,
-        attendees: [Address;1],
+        attendees: [Address;100],
         index: U256 ) -> (){
-        
+        assert!(attendeesKey > 0, ErrorCodes.AttendeesAlreadyDeployed)
         checkCaller!(caller == poolOwner, ErrorCodes.InvalidCaller)
-        let path = u256To8Bytes!(key)
+        let path = u256To8Bytes!(key) // key can be anything, just have to a ByteVec type
 
         let (encodedImmFields, encodedMutFields) = AttendeesStack.encodeFields!(
             owner,
@@ -71,17 +71,16 @@ Abstract Contract Walph(
         // Create a sub contract from the given key and value.
         // The sub contract id is `blake2b(blake2b(selfContractId!() ++ path))`.
         // It will fail if the sub contract already exists.
-        let contractId = copyCreateSubContract!{caller -> 1 alph}(
-            u256To8Bytes!(path),
+        let contractId = copyCreateSubContract!(
+            path,
             attendeesStackTemplateId,
             encodedImmFields,
             encodedMutFields
         )
-
-        attendeesKey = key
+        
+        // maybe it's not a good to store it, will see later
+        attendeesKey = path
         emit SubContractCreated(key, contractId)
-
-
     }
 
     @using(preapprovedAssets = true, assetsInContract = true, updateFields = true, checkExternalCaller = false)
@@ -102,10 +101,10 @@ Abstract Contract Walph(
         let numberTicketsBought = amount / ticketPrice
         let mut numberPlaceCounter = 0
 
-        let path = u256To8Bytes(key)
-
+        let path = u256To8Bytes!(key)
         // Get the sub contract id by the `subContractId!` built-in function
         let attendeesStack =  subContractId!(path)
+
         while(numberPlaceCounter < numberTicketsBought){
             attendeesStack.push(caller)
             numAttendees = numAttendees + 1

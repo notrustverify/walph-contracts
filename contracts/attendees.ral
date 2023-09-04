@@ -2,7 +2,7 @@ Contract AttendeesStack(
     owner: Address,
     zeroAddress: Address,
     stackSize: U256,
-    mut attendees: [Address;1],
+    mut attendees: [Address;100],
     mut index: U256
 ){
 

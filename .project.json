@@ -60,16 +60,9 @@
     },
     "Walph": {
       "sourceFile": "walph.ral",
-      "sourceCodeHash": "81cd95809543e9cde64ac7d5b1b28f890dc13ba9a7755b83f7f35c4c21de1603",
+      "sourceCodeHash": "08cccc7643b012034b9d2f225106df4552d7ba9b8202f8b32613395382af9510",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
-      "warnings": []
-    },
-    "Walph100": {
-      "sourceFile": "walphCopy.ral",
-      "sourceCodeHash": "5ed0654b4559b9cf56d4de8851fa79a1fcb4b7c2a83af1ea5fd84ada266e8f03",
-      "bytecodeDebugPatch": "",
-      "codeHashDebug": "c16ab0d477a03818b3261b88de45fa0a5882ce3a3cb7ed27c2d4d2eac86682fa",
       "warnings": []
     },
     "Walph50HodlAlf": {
