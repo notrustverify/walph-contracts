@@ -9,6 +9,13 @@
     "ignoreCheckExternalCallerWarnings": false
   },
   "infos": {
+    "AttendeesStack": {
+      "sourceFile": "attendees.ral",
+      "sourceCodeHash": "c0e19e949fcec13e5aa75582c2bb2a67ec8bdb61300a00c28a93ffb53a72ec5e",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "cc061ea79b9d5b1eded31668ce460ef0c5f3e2d02c911355d393f8074b628f13",
+      "warnings": []
+    },
     "Buy": {
       "sourceFile": "buyTicket.ral",
       "sourceCodeHash": "65c92e3ec6e467f0ccb0af0fb5e748d4875a711172c3c6b6a4a1b4e90c1a6210",
@@ -53,9 +60,16 @@
     },
     "Walph": {
       "sourceFile": "walph.ral",
-      "sourceCodeHash": "f9e620ba82af51b41437d7e75a19e49cc462a628229acb30b1c017d2202da574",
+      "sourceCodeHash": "81cd95809543e9cde64ac7d5b1b28f890dc13ba9a7755b83f7f35c4c21de1603",
       "bytecodeDebugPatch": "",
-      "codeHashDebug": "71e3ccf3dd8578cf3501dce49dc5be3945d24bd14fba8b0ec4b3b137790b51f8",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "Walph100": {
+      "sourceFile": "walphCopy.ral",
+      "sourceCodeHash": "5ed0654b4559b9cf56d4de8851fa79a1fcb4b7c2a83af1ea5fd84ada266e8f03",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "c16ab0d477a03818b3261b88de45fa0a5882ce3a3cb7ed27c2d4d2eac86682fa",
       "warnings": []
     },
     "Walph50HodlAlf": {
