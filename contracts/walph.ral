@@ -10,7 +10,7 @@ Abstract Contract Walph(
     mut open: Bool,
     mut balance: U256,
     //mut numAttendees: U256,
-    mut attendees: [Address;100],
+    //mut attendees: [Address;100],
     mut lastWinner: Address
 ){
     
@@ -45,13 +45,17 @@ Abstract Contract Walph(
         return balance
     }
 
+    pub fn initAttendeesStack() -> (){
+        setAttendeesStack(callerAddress!(), 1, poolOwner, callerAddress!(), 1, [callerAddress!()], 0)
+    }
+
     @using(preapprovedAssets = true, checkExternalCaller = true)
     pub fn setAttendeesStack(caller: Address, key: U256,
         owner: Address,
         zeroAddress: Address,
         stackSize: U256,
-        mut attendees: [Address;100],
-        mut index: U256 ) -> (){
+        attendees: [Address;1],
+        index: U256 ) -> (){
         
         checkCaller!(caller == poolOwner, ErrorCodes.InvalidCaller)
         let path = u256To8Bytes!(key)
@@ -63,7 +67,7 @@ Abstract Contract Walph(
             attendees,
             index)
 
-        // Contract `AttendeesStack` has only multiple fields
+        // Contract `AttendeesStack` has multiple fields
         // Create a sub contract from the given key and value.
         // The sub contract id is `blake2b(blake2b(selfContractId!() ++ path))`.
         // It will fail if the sub contract already exists.

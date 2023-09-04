@@ -1,0 +1,120 @@
+{
+  "version": "v2.5.0",
+  "name": "AttendeesStack",
+  "bytecode": "40680309403f4067010000000102a0640201000001014021b4ce00450e7ba0640c330c7ba0647a134064314dc31700ce01a0647a134064314dc4a0640d2ba1640616005e160002010001010018b4ce00450e7ba064ce02310d7b1600a0647a134064314dc4a0640d2aa1640516005e",
+  "codeHash": "cc061ea79b9d5b1eded31668ce460ef0c5f3e2d02c911355d393f8074b628f13",
+  "fieldsSig": {
+    "names": [
+      "owner",
+      "zeroAddress",
+      "stackSize",
+      "attendees",
+      "index"
+    ],
+    "types": [
+      "Address",
+      "Address",
+      "U256",
+      "[Address;100]",
+      "U256"
+    ],
+    "isMutable": [
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "eventsSig": [
+    {
+      "name": "AddressPushed",
+      "fieldNames": [
+        "address"
+      ],
+      "fieldTypes": [
+        "Address"
+      ]
+    },
+    {
+      "name": "AddressPopped",
+      "fieldNames": [
+        "address"
+      ],
+      "fieldTypes": [
+        "Address"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "getIndex",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": [
+        "U256"
+      ]
+    },
+    {
+      "name": "pop",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": [
+        "Address"
+      ]
+    },
+    {
+      "name": "push",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [
+        "address"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    }
+  ],
+  "constants": [],
+  "enums": [
+    {
+      "name": "ErrorCodes",
+      "fields": [
+        {
+          "name": "StackEmpty",
+          "value": {
+            "type": "U256",
+            "value": "0"
+          }
+        },
+        {
+          "name": "StackFull",
+          "value": {
+            "type": "U256",
+            "value": "1"
+          }
+        },
+        {
+          "name": "InvalidCaller",
+          "value": {
+            "type": "U256",
+            "value": "2"
+          }
+        }
+      ]
+    }
+  ]
+}

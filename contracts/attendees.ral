@@ -1,0 +1,49 @@
+Contract AttendeesStack(
+    owner: Address,
+    zeroAddress: Address,
+    stackSize: U256,
+    mut attendees: [Address;1],
+    mut index: U256
+){
+
+    event AddressPushed(address: Address)
+    event AddressPopped(address: Address)
+
+    enum ErrorCodes {
+        StackEmpty = 0
+        StackFull = 1
+        InvalidCaller = 2
+    }
+
+    pub fn getIndex() -> (U256){
+        return index
+    }
+
+    @using(updateFields = true)
+    pub fn pop() -> (Address) {
+        checkCaller!(callerAddress!() == owner, ErrorCodes.InvalidCaller)
+        
+        assert!(index > 0, ErrorCodes.StackEmpty)
+
+        let addressPopped = attendees[index]
+        attendees[index] = zeroAddress
+        index = index - 1
+
+        emit AddressPopped(addressPopped)
+
+        return addressPopped
+    }
+
+    @using(updateFields = true)
+    pub fn push(address: Address) -> (){
+        checkCaller!(callerAddress!() == owner, ErrorCodes.InvalidCaller)
+
+        assert!(index < stackSize, ErrorCodes.StackFull)
+        
+        attendees[index] = address
+        index = index + 1
+
+        emit AddressPushed(address)
+    }
+
+}
