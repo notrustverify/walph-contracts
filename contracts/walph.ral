@@ -2,9 +2,7 @@ Contract Walph(
     poolSize: U256,
     poolOwner: Address,
     poolFees: U256,
-    tokenIdToHold: ByteVec,
     ticketPrice: U256,
-    mut minTokenAmountToHold: U256,
     mut open: Bool,
     mut balance: U256,
     mut feesBalance: U256,
@@ -98,9 +96,6 @@ Contract Walph(
         assert!(open, ErrorCodes.PoolClosed)
         assert!(addModN!(amount,0 , 10 ** 18) == 0, ErrorCodes.InvalidAmount)
         assert!(amount >= ticketPrice, ErrorCodes.InvalidAmount)
-        if (minTokenAmountToHold > 0){
-            assert!(tokenRemaining!(caller, tokenIdToHold) >= minTokenAmountToHold, ErrorCodes.NotEnoughToken)
-        }
                 
         let numberTicketsBought = amount / ticketPrice
         let mut numberPlaceCounter = 0

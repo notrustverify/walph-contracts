@@ -63,7 +63,7 @@ async function destroy(privKey: string, group: number, contractName: string) {
 
     await Destroy.execute(wallet, {
       initialFields: { walphContract: walpheContractId},
-      attoAlphAmount: 5n * DUST_AMOUNT,
+      attoAlphAmount: ONE_ALPH + 5n * DUST_AMOUNT,
     });
 
     console.log(walpheContractAddress + " destroyed")
