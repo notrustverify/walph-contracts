@@ -89,6 +89,48 @@ Contract Walph(
 
     }
 
+
+    pub fn initAttendeesStack() -> (){
+        checkCaller!(callerAddress!() == poolOwner, ErrorCodes.InvalidCaller)
+
+        setAttendeesStack(callerAddress!(),selfContractId!() , poolOwner, callerAddress!(), 1, attendees, 0)
+    }
+
+    // Note for later: this could work but since the array have to initialized and then passed to the function it make no sense to use a subcontract. What I'm looking here is to be able to init without having to pass an array and then just use pop() and push() function
+    @using(preapprovedAssets = true, checkExternalCaller = false, assetsInContract = true )
+    fn setAttendeesStack(caller: Address, key: U256,
+        owner: Address,
+        zeroAddress: Address,
+        stackSize: U256,
+        attendees: [Address;100],
+        index: U256 ) -> (){
+        assert!(attendeesKey > 0, ErrorCodes.AttendeesAlreadyDeployed)
+        checkCaller!(caller == poolOwner, ErrorCodes.InvalidCaller)
+        let path = u256To8Bytes!(key) // key can be anything, just have to a ByteVec type
+
+        let (encodedImmFields, encodedMutFields) = AttendeesStack.encodeFields!(
+            owner,
+            zeroAddress,
+            stackSize,
+            attendees,
+            index)
+
+        // Contract `AttendeesStack` has multiple fields
+        // Create a sub contract from the given key and value.
+        // The sub contract id is `blake2b(blake2b(selfContractId!() ++ path))`.
+        // It will fail if the sub contract already exists.
+        let contractId = copyCreateSubContract!(
+            path,
+            attendeesStackTemplateId,
+            encodedImmFields,
+            encodedMutFields
+        )
+        
+        // maybe it's not a good to store it, will see later
+        attendeesKey = path
+        emit SubContractCreated(key, contractId)
+    }
+
     @using(preapprovedAssets = true, assetsInContract = true, updateFields = true, checkExternalCaller = false)
     pub fn buyTicket(amount: U256) -> (){
         let caller = callerAddress!()
