@@ -13,10 +13,17 @@ Contract WalphStack(
         StackEmpty = 0
         StackFull = 1
         InvalidCaller = 2
+        OutOfBound = 3
     }
 
     pub fn getIndex() -> (U256){
         return index
+    }
+
+    pub fn getElementByIndex(index: U256) -> (Address){
+        assert!(index < stackSize, ErrorCodes.OutOfBound)
+
+        return attendees[index]
     }
 
     @using(updateFields = true)

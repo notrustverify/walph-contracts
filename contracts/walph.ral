@@ -3,11 +3,11 @@ Contract Walph(
     poolOwner: Address,
     poolFees: U256,
     ticketPrice: U256,
+    attendeesStackContractKey: ByteVec,
     mut open: Bool,
     mut balance: U256,
     mut feesBalance: U256,
     mut numAttendees: U256,
-    mut attendees: [Address;21],
     mut lastWinner: Address
 ){
     
@@ -142,12 +142,14 @@ Contract Walph(
         let numberTicketsBought = amount / ticketPrice
         let mut numberPlaceCounter = 0
 
-        // fill the array with the buyer address
-        while (numberPlaceCounter < numberTicketsBought){
-            attendees[numAttendees] = caller
+        let path = u256To8Bytes!(key)
+        // Get the sub contract id by the `subContractId!` built-in function
+        let attendeesStack =  subContractId!(path)
+
+        while(numberPlaceCounter < numberTicketsBought){
+            attendeesStack.push(caller)
             numAttendees = numAttendees + 1
             numberPlaceCounter = numberPlaceCounter + 1
-
         }
 
         emit TicketBought(caller, amount)
