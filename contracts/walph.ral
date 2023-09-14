@@ -3,6 +3,7 @@ Contract Walph(
     poolOwner: Address,
     poolFees: U256,
     ticketPrice: U256,
+    attendeesStackTemplateId: ByteVec,
     attendeesStackContractKey: ByteVec,
     mut open: Bool,
     mut balance: U256,
@@ -93,12 +94,14 @@ Contract Walph(
     pub fn initAttendeesStack() -> (){
         checkCaller!(callerAddress!() == poolOwner, ErrorCodes.InvalidCaller)
 
-        setAttendeesStack(callerAddress!(),selfContractId!() , poolOwner, callerAddress!(), 1, attendees, 0)
+        setAttendeesStack(callerAddress!(), selfContractId!() , poolOwner, callerAddress!(), 1, attendees, 0)
     }
 
     // Note for later: this could work but since the array have to initialized and then passed to the function it make no sense to use a subcontract. What I'm looking here is to be able to init without having to pass an array and then just use pop() and push() function
     @using(preapprovedAssets = true, checkExternalCaller = false, assetsInContract = true )
-    fn setAttendeesStack(caller: Address, key: U256,
+    fn setAttendeesStack(
+        caller: Address,
+        key: U256,
         owner: Address,
         zeroAddress: Address,
         stackSize: U256,
