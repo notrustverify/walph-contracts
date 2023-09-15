@@ -33,36 +33,12 @@ export namespace WalphTypes {
     poolSize: bigint;
     poolOwner: Address;
     poolFees: bigint;
-    tokenIdToHold: HexString;
     ticketPrice: bigint;
-    minTokenAmountToHold: bigint;
+    attendeesStack: HexString;
     open: boolean;
     balance: bigint;
     feesBalance: bigint;
     numAttendees: bigint;
-    attendees: [
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address
-    ];
     lastWinner: Address;
   };
 
@@ -75,9 +51,6 @@ export namespace WalphTypes {
   export type PoolOpenEvent = Omit<ContractEvent, "fields">;
   export type PoolCloseEvent = Omit<ContractEvent, "fields">;
   export type DestroyEvent = ContractEvent<{ from: Address }>;
-  export type NewMinTokenAmountToHoldEvent = ContractEvent<{
-    newAmount: bigint;
-  }>;
   export type WinnerEvent = ContractEvent<{ address: Address }>;
 
   export interface CallMethodTable {
@@ -122,8 +95,7 @@ class Factory extends ContractFactory<WalphInstance, WalphTypes.Fields> {
     PoolOpen: 1,
     PoolClose: 2,
     Destroy: 3,
-    NewMinTokenAmountToHold: 4,
-    Winner: 5,
+    Winner: 4,
   };
   consts = {
     ErrorCodes: {
@@ -132,7 +104,6 @@ class Factory extends ContractFactory<WalphInstance, WalphTypes.Fields> {
       PoolAlreadyOpen: BigInt(2),
       PoolClosed: BigInt(3),
       InvalidCaller: BigInt(4),
-      NotEnoughToken: BigInt(5),
       PoolNotFull: BigInt(6),
       InvalidAmount: BigInt(7),
     },
@@ -201,11 +172,6 @@ class Factory extends ContractFactory<WalphInstance, WalphTypes.Fields> {
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "destroyPool", params);
     },
-    changeMinAmountToHold: async (
-      params: TestContractParams<WalphTypes.Fields, { newAmount: bigint }>
-    ): Promise<TestContractResult<null>> => {
-      return testMethod(this, "changeMinAmountToHold", params);
-    },
   };
 }
 
@@ -213,8 +179,8 @@ class Factory extends ContractFactory<WalphInstance, WalphTypes.Fields> {
 export const Walph = new Factory(
   Contract.fromJson(
     WalphContractJson,
-    "=6-2=2-2+2a=3-1+5=3-1+e=3-1+7=2-2+90=2-2+99=1-3+0c0=3-1+5=2+9=1-1=3-1+0=3-1+341d7=11-1+4=30+0016007e0207726e6420697320=874",
-    "ebcc9a6dc071faaf8c0dfe7af98505e1c0cb15a6a5544883a25f29f92b38244e"
+    "=4-2=2-2+2a=3-1+9=2-2+82=3-1+b=3+44=1+9d=2-2+c=1-3=3-1+5=2-2+8a=3-1+041b3=11-1+4=30+0016007e0207726e6420697320=802",
+    "c67f32944981736e1b5383a5188d64884d44c1e45a5dfba68c7675256fc24583"
   )
 );
 
@@ -284,19 +250,6 @@ export class WalphInstance extends ContractInstance {
     );
   }
 
-  subscribeNewMinTokenAmountToHoldEvent(
-    options: EventSubscribeOptions<WalphTypes.NewMinTokenAmountToHoldEvent>,
-    fromCount?: number
-  ): EventSubscription {
-    return subscribeContractEvent(
-      Walph.contract,
-      this,
-      options,
-      "NewMinTokenAmountToHold",
-      fromCount
-    );
-  }
-
   subscribeWinnerEvent(
     options: EventSubscribeOptions<WalphTypes.WinnerEvent>,
     fromCount?: number
@@ -316,7 +269,6 @@ export class WalphInstance extends ContractInstance {
       | WalphTypes.PoolOpenEvent
       | WalphTypes.PoolCloseEvent
       | WalphTypes.DestroyEvent
-      | WalphTypes.NewMinTokenAmountToHoldEvent
       | WalphTypes.WinnerEvent
     >,
     fromCount?: number

@@ -19,9 +19,7 @@ const deployWalph: DeployFunction<Settings> = async (
         poolSize: BigInt(poolSize * ticketPrice) * 10n ** 18n ,
         poolOwner: deployer.account.address,
         poolFees: 1n,
-        minTokenAmountToHold: 0n,
         ticketPrice: BigInt(ticketPrice) * 10n ** 18n,
-        tokenIdToHold: "",
         open: true,
         balance: 0n,
         feesBalance: 0n,
@@ -64,8 +62,8 @@ const deployWalph: DeployFunction<Settings> = async (
 
   poolSize = 21
   ticketPrice = 10
-  //const testnetAlf = (await mintToken(deployer.account.address, 2000n * 10n ** 18n)).contractId
-  const testnetAlf = "d38c49260de1d70a0d6303525ab831cadd3307075b10818fa604836894731701"
+  const testnetAlf = (await mintToken(deployer.account.address, 2000n * 10n ** 18n)).contractId
+  //const testnetAlf = "d38c49260de1d70a0d6303525ab831cadd3307075b10818fa604836894731701"
   const resultAlf = await deployer.deployContract(Walf, {
     // The initial states of the faucet contract
     initialFields: {

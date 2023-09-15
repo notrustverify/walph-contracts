@@ -1,8 +1,9 @@
 Contract WalphStack(
-    contractAddressOwner: ByteVec,
-    zeroAddress: Address,
+    owner: Address,
     stackSize: U256,
-    mut attendees: [Address;100],
+    mut contractOwnerSet: Bool,
+    mut contractAddressOwner: Address,
+    mut attendees: [Address;10],
     mut index: U256
 ){
 
@@ -14,26 +15,38 @@ Contract WalphStack(
         StackFull = 1
         InvalidCaller = 2
         OutOfBound = 3
+        ContractOwnerNotSet = 4
     }
 
     pub fn getIndex() -> (U256){
         return index
     }
 
-    pub fn getElementByIndex(index: U256) -> (Address){
-        assert!(index < stackSize, ErrorCodes.OutOfBound)
+    pub fn getElementByIndex(indexToGet: U256) -> (Address){
+        assert!(indexToGet < stackSize, ErrorCodes.OutOfBound)
 
-        return attendees[index]
+        return attendees[indexToGet]
+    }
+
+    pub fn getStackSize() -> (U256){
+        return stackSize
+    }
+
+    @using(updateFields = true)
+    pub fn setOwner(walphContractAddress: Address) -> (){
+        checkCaller!(callerAddress!() == owner, ErrorCodes.InvalidCaller)
+        contractAddressOwner =  walphContractAddress
+        contractOwnerSet = true
     }
 
     @using(updateFields = true)
     pub fn pop() -> (Address) {
-        checkCaller!(callerAddress!() == contractAddressOwner, ErrorCodes.InvalidCaller)
-        
+        checkCaller!(callerAddress!() == owner, ErrorCodes.InvalidCaller)
+
         assert!(index > 0, ErrorCodes.StackEmpty)
+        assert!(contractOwnerSet, ErrorCodes.ContractOwnerNotSet)
 
         let addressPopped = attendees[index]
-        attendees[index] = zeroAddress
         index = index - 1
 
         emit AddressPopped(addressPopped)
@@ -43,9 +56,10 @@ Contract WalphStack(
 
     @using(updateFields = true)
     pub fn push(address: Address) -> (){
-        checkCaller!(callerAddress!() == contractAddressOwner, ErrorCodes.InvalidCaller)
+        checkCaller!(callerAddress!() == owner, ErrorCodes.InvalidCaller)
 
         assert!(index < stackSize, ErrorCodes.StackFull)
+        assert!(contractOwnerSet, ErrorCodes.ContractOwnerNotSet)
         
         attendees[index] = address
         index = index + 1
@@ -55,7 +69,9 @@ Contract WalphStack(
 
     @using(updateFields = true)
     pub fn resetIndex() -> (){
-        checkCaller!(callerAddress!() == contractAddressOwner, ErrorCodes.InvalidCaller)
+        checkCaller!(callerAddress!() == owner, ErrorCodes.InvalidCaller)
+
+        assert!(contractOwnerSet, ErrorCodes.ContractOwnerNotSet)
 
         index = 0
 
