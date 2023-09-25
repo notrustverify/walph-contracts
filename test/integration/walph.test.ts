@@ -128,7 +128,7 @@ describe('integration tests', () => {
       })
 
       const contractAfterPoolDistributionBalance = await web3.getCurrentNodeProvider().addresses.getAddressesAddressBalance(walphContractAddress)
-      expect(contractAfterPoolDistributionBalance.balanceHint).toEqual("1.09 ALPH")
+      expect(contractAfterPoolDistributionBalance.balanceHint).toEqual("1.1 ALPH")
       const winnerBalance = await web3.getCurrentNodeProvider().addresses.getAddressesAddressBalance(signer.address)
 
 

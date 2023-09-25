@@ -48,7 +48,7 @@ Contract Walph(
         lastWinner = attendees[random()]
         
 
-        let poolOwnerAmount = balance * poolFees/100
+        let poolOwnerAmount = (balance+amount) * poolFees/100
         let winnerAmount = balance - poolOwnerAmount
         balance = 0
         numAttendees = 0
@@ -85,7 +85,7 @@ Contract Walph(
         checkCaller!(callerAddress!() == poolOwner, ErrorCodes.InvalidCaller)
         assert!(feesBalance > 0, ErrorCodes.PoolNotFull)
 
-        transferTokenFromSelf!(poolOwner, ALPH, feesBalance - 10*dustAmount!()) // to not hit LowerThanContractMinimalBalance
+        transferTokenFromSelf!(poolOwner, ALPH, feesBalance) // to not hit LowerThanContractMinimalBalance
         feesBalance = 0
 
     }
@@ -125,7 +125,7 @@ Contract Walph(
             assert!(numAttendees == poolSize / ticketPrice, ErrorCodes.PoolNotFull)
             
 
-            distributePrize{selfAddress!() -> ALPH: balance + dustAmount!(); caller -> ALPH: amount}(caller, amount)
+            distributePrize{selfAddress!() -> ALPH: balance; caller -> ALPH: amount}(caller, amount)
        } else {
             balance = balance + amount
             transferTokenToSelf!(caller, ALPH, amount)
