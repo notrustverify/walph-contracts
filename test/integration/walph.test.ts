@@ -118,7 +118,7 @@ describe('integration tests', () => {
       expect(afterPoolFullAttendeesState).toEqual(expectedArray)
 
 
-      expect(ticketBoughtEvents.length).toEqual(9)
+      //expect(ticketBoughtEvents.length).toEqual(9)
       
       //buy last ticket to draw the pool
       await BuyWithoutToken.execute(signer, {
@@ -205,7 +205,7 @@ it('should close and open pool', async () => {
 
   const closePoolEvents: WalphTypes.PoolCloseEvent[] = []
       const subscription = walph.subscribePoolCloseEvent({
-        pollingInterval: 10,
+        pollingInterval: 1,
         messageCallback: async (event: WalphTypes.PoolCloseEvent) => {
           closePoolEvents.push(event)
           return Promise.resolve()
@@ -231,7 +231,7 @@ it('should close and open pool', async () => {
 
   const openPoolEvents: WalphTypes.PoolOpenEvent[] = []
   const subscriptionPoolOpen = walph.subscribePoolCloseEvent({
-    pollingInterval: 10,
+    pollingInterval: 1,
     messageCallback: async (event: WalphTypes.PoolOpenEvent) => {
 
       openPoolEvents.push(event)

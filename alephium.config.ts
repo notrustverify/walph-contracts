@@ -13,9 +13,16 @@ const configuration: Configuration<Settings> = {
       },
       privateKeys: process.env.PRIVKEY_TESTNET.split(',')  //to pass the test uncomment
     },
-    mainnet: undefined,
+    mainnet:{
+	   nodeUrl: process.env.NODE_URL ?? 'https://node-alephium.ono.re/',
+	   settings: {
+	   },
+	   privateKeys: process.env.PRIVKEY_MAINNET.split(',')
+	   
+    }, 
+	   
     devnet: {//Make sure the two values match what's in your devnet configuration
-    nodeUrl: 'http://127.0.0.1:22973',
+    nodeUrl: 'http://localhost:22973',
     settings: {
       privateKeys: []
     },

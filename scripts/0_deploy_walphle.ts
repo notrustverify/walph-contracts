@@ -37,16 +37,17 @@ const deployWalph: DeployFunction<Settings> = async (
 
   poolSize = 50
   ticketPrice = 10
+  const mainnetAlf = "66da610efb5129c062e88e5fd65fe810f31efd1597021b2edf887a4360fa0800"
   const resultSecond = await deployer.deployContract(Walph50HodlAlf, {
 
     // The initial states of the faucet contract
     initialFields: {
         poolSize: BigInt(poolSize * ticketPrice) * 10n ** 18n,
         poolOwner: deployer.account.address,
-        poolFees: 10n,
+        poolFees: 1n,
         minTokenAmountToHold: 1n,
         ticketPrice: BigInt(ticketPrice) * 10n ** 18n,
-        tokenIdToHold: "47504df5a7b18dcecdbf1ea00b7e644d0a7c93919f2d2061ba153f241f03b801",
+        tokenIdToHold: mainnetAlf,
         open: true,
         balance: 0n,
         feesBalance: 0n,
@@ -73,7 +74,7 @@ const deployWalph: DeployFunction<Settings> = async (
         poolOwner: deployer.account.address,
         poolFees: 1n,
         ticketPrice: BigInt(ticketPrice) * 10n ** 9n,
-        tokenId: testnetAlf,
+        tokenId: mainnetAlf,
         open: true,
         balance: 0n,
         feesBalance: 0n,
@@ -115,7 +116,7 @@ const deployWalph: DeployFunction<Settings> = async (
   })
 
 
-  console.log("First draw in: "+drawTimestamp)
+  console.log("First draw in: "+ new Date(Number(drawTimestamp)))
   console.log('Walph Timed contract id: ' + resultTimedWalph.contractInstance.contractId)
   console.log('Walf contract address: ' + resultTimedWalph.contractInstance.address)
 
