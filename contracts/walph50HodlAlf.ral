@@ -41,7 +41,7 @@ Contract Walph50HodlAlf(
         return addModN!(0,seed, numAttendees)
     }
 
-    @using(preapprovedAssets = true, assetsInContract = false, updateFields = true, checkExternalCaller = false)
+    @using(preapprovedAssets = true, assetsInContract = false, updateFields = true)
     fn distributePrize(lastAttendee: Address, amount: U256) -> (){
          checkCaller!(callerAddress!() == selfAddress!(), ErrorCodes.InvalidCaller)
          assert!(balance + amount >= poolSize, ErrorCodes.PoolNotFull)
