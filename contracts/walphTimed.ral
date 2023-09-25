@@ -89,7 +89,7 @@ Contract WalphTimed(
         checkCaller!(callerAddress!() == poolOwner, ErrorCodes.InvalidCaller)
         assert!(feesBalance > 0, ErrorCodes.PoolNotFull)
 
-        transferTokenFromSelf!(poolOwner, ALPH, feesBalance - 10*dustAmount!()) // to not hit LowerThanContractMinimalBalance
+        transferTokenFromSelf!(poolOwner, ALPH, feesBalance)
         feesBalance = 0
 
     }
@@ -107,7 +107,7 @@ Contract WalphTimed(
 
             drawTimestamp = actualBlockTs + (21600*1000) // each ten minutes
 
-            distributePrize{selfAddress!() -> ALPH: balance + dustAmount!()}()
+            distributePrize{selfAddress!() -> ALPH: balance}()
         }
         emit PoolDrawn(balance)
 

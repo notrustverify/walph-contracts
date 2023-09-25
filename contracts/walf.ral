@@ -46,19 +46,24 @@ Contract Walf(
         lastWinner = attendees[random()]
         
 
-        let poolOwnerAmount = balance * poolFees/100
-        let winnerAmount = balance - poolOwnerAmount
+        let poolOwnerAmount = (balance+amount) * poolFees/100
+
+        //one person buy all the pool not update the balance, only the amount is taken
+        if(balance > 0){
+            let winnerAmount = balance - poolOwnerAmount
+            transferTokenFromSelf!(poolOwner, ALPH, dustAmount!())
+            transferTokenFromSelf!(lastWinner, tokenId, winnerAmount)
+            dustBalance = dustBalance - dustAmount!()
+        }
+
         balance = 0
         numAttendees = 0
-        
-
-        //transferTokenFromSelf!(poolOwner, tokenId, poolOwnerAmount)
-        transferTokenFromSelf!(poolOwner, ALPH, dustAmount!())
-        transferTokenFromSelf!(lastWinner, tokenId, winnerAmount)
+        dustBalance = dustBalance - dustAmount!()
 
         // the last attendee will be the one with the rest of ALPH to sent to the winner, it will be the one who send it in addition of the rest of the pool
         transferToken!(lastAttendee, lastWinner, ALPH,  dustAmount!())
         transferToken!(lastAttendee, lastWinner, tokenId, amount)
+        
 
         emit Winner(lastWinner)
 
@@ -86,10 +91,10 @@ Contract Walf(
         checkCaller!(callerAddress!() == poolOwner, ErrorCodes.InvalidCaller)
         assert!(feesBalance > 0, ErrorCodes.PoolNotFull)
 
-        transferTokenFromSelf!(poolOwner, ALPH, dustAmount!())
-        transferTokenFromSelf!(poolOwner, ALPH, dustBalance - 3*dustAmount!())
-        transferTokenFromSelf!(poolOwner, tokenId, feesBalance - poolFees * 10 ** 7)
+        transferTokenFromSelf!(poolOwner, ALPH, dustBalance)
+        transferTokenFromSelf!(poolOwner, tokenId, feesBalance)
         feesBalance = 0
+        dustBalance = 0
 
     }
 

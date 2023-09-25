@@ -22,7 +22,7 @@ const configuration: Configuration<Settings> = {
     }, 
 	   
     devnet: {//Make sure the two values match what's in your devnet configuration
-    nodeUrl: 'http://localhost:22973',
+    nodeUrl: 'http://127.0.0.1:22973',
     settings: {
       privateKeys: []
     },

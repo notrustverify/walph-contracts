@@ -159,7 +159,7 @@ describe('integration tests', () => {
 
       await WithdrawFees.execute(signer, {
         initialFields: { walphContract: walfContractId},
-        attoAlphAmount: 2n*DUST_AMOUNT
+        attoAlphAmount: DUST_AMOUNT
       })
 
       const afterWhitdraw = await walfDeployed.fetchState()

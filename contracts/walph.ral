@@ -49,13 +49,14 @@ Contract Walph(
         
 
         let poolOwnerAmount = (balance+amount) * poolFees/100
-        let winnerAmount = balance - poolOwnerAmount
+       
+        //one person buy all the pool not update the balance, only the amount is taken
+        if(balance > 0){
+            let winnerAmount = balance - poolOwnerAmount
+            transferTokenFromSelf!(lastWinner, ALPH, winnerAmount)
+        }
         balance = 0
         numAttendees = 0
-
-        //transferTokenFromSelf!(poolOwner, ALPH, poolOwnerAmount)
-        transferTokenFromSelf!(lastWinner, ALPH, winnerAmount)
-
         // the last attendee will be the one with the rest of ALPH to sent to the winner, it will be the one who send it in addition of the rest of the pool
         transferToken!(lastAttendee, lastWinner, ALPH, amount)
 
