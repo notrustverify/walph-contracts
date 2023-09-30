@@ -36,12 +36,83 @@ export namespace WalphTimedTypes {
     tokenIdToHold: HexString;
     ticketPrice: bigint;
     drawTimestamp: bigint;
+    repeatEvery: bigint;
     minTokenAmountToHold: bigint;
     open: boolean;
     balance: bigint;
     feesBalance: bigint;
     numAttendees: bigint;
     attendees: [
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
+      Address,
       Address,
       Address,
       Address,
@@ -70,6 +141,7 @@ export namespace WalphTimedTypes {
   }>;
   export type WinnerEvent = ContractEvent<{ address: Address }>;
   export type PoolDrawnEvent = ContractEvent<{ amount: bigint }>;
+  export type NewRepeatEveryEvent = ContractEvent<{ newRepeat: bigint }>;
 
   export interface CallMethodTable {
     getPoolState: {
@@ -119,6 +191,7 @@ class Factory extends ContractFactory<
     NewMinTokenAmountToHold: 4,
     Winner: 5,
     PoolDrawn: 6,
+    NewRepeatEvery: 7,
   };
   consts = {
     ErrorCodes: {
@@ -240,6 +313,11 @@ class Factory extends ContractFactory<
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "changeMinAmountToHold", params);
     },
+    changeRepeatEvery: async (
+      params: TestContractParams<WalphTimedTypes.Fields, { newRepeat: bigint }>
+    ): Promise<TestContractResult<null>> => {
+      return testMethod(this, "changeRepeatEvery", params);
+    },
   };
 }
 
@@ -247,8 +325,8 @@ class Factory extends ContractFactory<
 export const WalphTimed = new Factory(
   Contract.fromJson(
     WalphTimedContractJson,
-    "=4-2=2-2+2a=3-1+a=2-2+a3=3-1+c=3-1+5=2-2+be=1-1=1-1+d9=2+1=1-1=2-2+aa=2-2+bf=3-1+5=3+841=1+c=11-1+4=30+0016007e0207726e6420697320=948",
-    "10601a43de449d88339b84e1b8089f0b5adbcac2a970906549b0e2781ef792b9"
+    "=6-2=2-2+2a=3-1+b=3-1+4=3-1+d=3-1+6=2-2+bf=2-2+da=2-2+0c=2-2+9e=3-1+3=3-1+9=2-2+dc=3-1+04205=11-1+4=30+0016007e0207726e6420697320=966",
+    "030dc44beb395eac832ed9d72b1b9e526d7a3b59c410d91b7284d0262d487690"
   )
 );
 
@@ -357,6 +435,19 @@ export class WalphTimedInstance extends ContractInstance {
     );
   }
 
+  subscribeNewRepeatEveryEvent(
+    options: EventSubscribeOptions<WalphTimedTypes.NewRepeatEveryEvent>,
+    fromCount?: number
+  ): EventSubscription {
+    return subscribeContractEvent(
+      WalphTimed.contract,
+      this,
+      options,
+      "NewRepeatEvery",
+      fromCount
+    );
+  }
+
   subscribeAllEvents(
     options: EventSubscribeOptions<
       | WalphTimedTypes.TicketBoughtEvent
@@ -366,6 +457,7 @@ export class WalphTimedInstance extends ContractInstance {
       | WalphTimedTypes.NewMinTokenAmountToHoldEvent
       | WalphTimedTypes.WinnerEvent
       | WalphTimedTypes.PoolDrawnEvent
+      | WalphTimedTypes.NewRepeatEveryEvent
     >,
     fromCount?: number
   ): EventSubscription {

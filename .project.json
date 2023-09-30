@@ -74,16 +74,16 @@
     },
     "Walf": {
       "sourceFile": "walf.ral",
-      "sourceCodeHash": "5d5d930935aead3bd18ed6f0529ca02b0e418d95c7a4d444d83cc2954cae759a",
-      "bytecodeDebugPatch": "=4-2=2+2=1-1=3-1+8=2-2+c1=3-1+a40d3=2+d=1-1=1+1=1-2+1=2-1=1+a=3-3=1-1=3-1+54218=11-1+4=30+0016007e0207726e6420697320=1004",
-      "codeHashDebug": "fde95ae79cf979eb009663f52ff9d7d11fee12084d4a07782112b53dd127de50",
+      "sourceCodeHash": "d10ef2780455dade9c2c83e571ea7d3471ed8efec0b5125720ae42c8a7854380",
+      "bytecodeDebugPatch": "=6-2=2+2=1-1=3-1+8=2-2+c1=3-1+a40d3=2+d=1-1=1+1=1-2+1=2-1=1+a=3-3=1-1=3-1+54218=11-1+4=30+0016007e0207726e6420697320=1004",
+      "codeHashDebug": "6670bde02683343394ad01aa60adb7bcb066ab6e502c4de3574708f20be25041",
       "warnings": []
     },
     "Walph": {
       "sourceFile": "walph.ral",
-      "sourceCodeHash": "37eb541444c4037ba54293e427fc3652de9f8e5d4e94f0d162f2eae5ff9a8eef",
-      "bytecodeDebugPatch": "=4-2=2-2+2a=3-1+e=3-1+7=2-2+90=3-1+9=2-2+a2=1-2+0=1+d=2+7=1-1=2-2+8d=3-1+3=3-1+641ca=11-1+4=30+0016007e0207726e6420697320=848",
-      "codeHashDebug": "73f9de37b21409d6680ac959c5d3d9443d56f118879199c843d06dc46c633d5a",
+      "sourceCodeHash": "05414ef2e5728ba7428a1ef062136d7857ba8995032c7ed8e08be718bcd0b353",
+      "bytecodeDebugPatch": "=6-2=2-2+2a=3-1+e=3-1+7=2-2+90=3-1+9=2-2+a2=1-2+0=1+d=2+7=1-1=2-2+8d=3-1+3=3-1+641ca=11-1+4=30+0016007e0207726e6420697320=848",
+      "codeHashDebug": "320ac70fe76786cd548b29e1abc84abbe51e12b073ae3e2a0ac738b3a784e002",
       "warnings": []
     },
     "Walph50HodlAlf": {
@@ -95,9 +95,16 @@
     },
     "WalphTimed": {
       "sourceFile": "walphTimed.ral",
-      "sourceCodeHash": "90c0c8da91847b1e4b5b4dee81af5f4a9835bbbf847131b03f45023245f99934",
-      "bytecodeDebugPatch": "=4-2=2-2+2a=3-1+a=2-2+a3=3-1+c=3-1+5=2-2+be=1-1=1-1+d9=2+1=1-1=2-2+aa=2-2+bf=3-1+5=3+841=1+c=11-1+4=30+0016007e0207726e6420697320=948",
-      "codeHashDebug": "10601a43de449d88339b84e1b8089f0b5adbcac2a970906549b0e2781ef792b9",
+      "sourceCodeHash": "ece183d378a62ed13dcfe9e24107db9c218b7c3a9c8dd61aba187d6709344eaa",
+      "bytecodeDebugPatch": "=6-2=2-2+2a=3-1+b=3-1+4=3-1+d=3-1+6=2-2+bf=2-2+da=2-2+0c=2-2+9e=3-1+3=3-1+9=2-2+dc=3-1+04205=11-1+4=30+0016007e0207726e6420697320=966",
+      "codeHashDebug": "030dc44beb395eac832ed9d72b1b9e526d7a3b59c410d91b7284d0262d487690",
+      "warnings": []
+    },
+    "Wayin": {
+      "sourceFile": "wayin.ral",
+      "sourceCodeHash": "2915dc6ab39fff5b1ef44e1ee546d1bc9822ccf206c097439dda9b7205b32ec5",
+      "bytecodeDebugPatch": "=4-2=2+2=1-1=3-1+8=2-2+c1=3-1+a40d3=2+d=1-1=1+1=1-2+1=2-1=1+a=3-3=1-1=3-1+54218=11-1+4=30+0016007e0207726e6420697320=1004",
+      "codeHashDebug": "81ee95c454f4cbec31aaf0bdb70df7cd3edc20e21f4befb30d80b56d6cf8d6c2",
       "warnings": []
     },
     "WithdrawFees": {

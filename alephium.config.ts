@@ -14,7 +14,7 @@ const configuration: Configuration<Settings> = {
       privateKeys: process.env.PRIVKEY_TESTNET.split(',')  //to pass the test uncomment
     },
     mainnet:{
-	   nodeUrl: process.env.NODE_URL ?? 'https://node-alephium.ono.re/',
+	   nodeUrl: process.env.NODE_URL ?? 'https://node-alephium.ono.re',
 	   settings: {
 	   },
 	   privateKeys: process.env.PRIVKEY_MAINNET.split(',')

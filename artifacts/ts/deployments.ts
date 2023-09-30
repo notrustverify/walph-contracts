@@ -13,7 +13,10 @@ import {
   WalfInstance,
   WalphTimed,
   WalphTimedInstance,
+  Wayin,
+  WayinInstance,
 } from ".";
+import { default as mainnetDeployments } from "../.deployments.mainnet.json";
 import { default as testnetDeployments } from "../.deployments.testnet.json";
 import { default as devnetDeployments } from "../.deployments.devnet.json";
 
@@ -24,6 +27,7 @@ export type Deployments = {
     Walph50HodlAlf: DeployContractExecutionResult<Walph50HodlAlfInstance>;
     Walf: DeployContractExecutionResult<WalfInstance>;
     WalphTimed: DeployContractExecutionResult<WalphTimedInstance>;
+    Wayin?: DeployContractExecutionResult<WayinInstance>;
   };
 };
 
@@ -53,6 +57,15 @@ function toDeployments(json: any): Deployments {
         json.contracts["WalphTimed"].contractInstance.address
       ),
     },
+    Wayin:
+      json.contracts["Wayin"] === undefined
+        ? undefined
+        : {
+            ...json.contracts["Wayin"],
+            contractInstance: Wayin.at(
+              json.contracts["Wayin"].contractInstance.address
+            ),
+          },
   };
   return {
     ...json,
@@ -65,7 +78,9 @@ export function loadDeployments(
   deployerAddress?: string
 ): Deployments {
   const deployments =
-    networkId === "testnet"
+    networkId === "mainnet"
+      ? mainnetDeployments
+      : networkId === "testnet"
       ? testnetDeployments
       : networkId === "devnet"
       ? devnetDeployments

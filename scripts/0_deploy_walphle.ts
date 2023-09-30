@@ -1,6 +1,6 @@
 import { Deployer, DeployFunction, getNetwork, Network } from '@alephium/cli'
 import { Settings } from '../alephium.config'
-import { Walph, Walph50HodlAlf, WalphTypes, Walph50HodlAlfTypes, Walf, WalfTypes, WalphTimed, WalphTimedTypes } from '../artifacts/ts'
+import { Walph, Walph50HodlAlf, WalphTypes, Walph50HodlAlfTypes, Walf, WalfTypes, WalphTimed, WalphTimedTypes, Wayin, WayinTypes } from '../artifacts/ts'
 import { DUST_AMOUNT, ZERO_ADDRESS } from '@alephium/web3'
 import { mintToken, transfer } from '@alephium/web3-test'
 
@@ -90,6 +90,10 @@ const deployWalph: DeployFunction<Settings> = async (
   console.log('Walf contract id: ' + resultAlf.contractInstance.contractId)
   console.log('Walf contract address: ' + resultAlf.contractInstance.address)
 
+
+ 
+
+
   poolSize = 80
   ticketPrice = 10
   //const testnetAlf = (await mintToken(deployer.account.address, 2000n * 10n ** 18n)).contractId
@@ -104,11 +108,12 @@ const deployWalph: DeployFunction<Settings> = async (
         ticketPrice: BigInt(ticketPrice) * 10n ** 18n,
         open: true,
         balance: 0n,
-        tokenIdToHold: testnetAlf,
+        tokenIdToHold: "",
         minTokenAmountToHold: 0n,
         feesBalance: 0n,
         numAttendees: 0n,
         drawTimestamp: drawTimestamp,
+        repeatEvery: drawTimestamp,
         attendees: Array(poolSize).fill(ZERO_ADDRESS) as WalphTimedTypes.Fields["attendees"],
         lastWinner: ZERO_ADDRESS
 
@@ -118,9 +123,36 @@ const deployWalph: DeployFunction<Settings> = async (
 
   console.log("First draw in: "+ new Date(Number(drawTimestamp)))
   console.log('Walph Timed contract id: ' + resultTimedWalph.contractInstance.contractId)
-  console.log('Walf contract address: ' + resultTimedWalph.contractInstance.address)
+  console.log('Walph Timed contract address: ' + resultTimedWalph.contractInstance.address)
+
+  poolSize = 10
+  ticketPrice = 1
+  //const testnetAlf = (await mintToken(deployer.account.address, 2000n * 10n ** 18n)).contractId
+  const mainnetAyin = "1a281053ba8601a658368594da034c2e99a0fb951b86498d05e76aedfe666800"
+  const decimal = 18n
+  const resultAyin = await deployer.deployContract(Wayin, {
+    // The initial states of the faucet contract
+    initialFields: {
+        poolSize: BigInt(poolSize * ticketPrice) * 10n ** decimal,
+        poolOwner: deployer.account.address,
+        poolFees: 1n,
+        ticketPrice: BigInt(ticketPrice) * 10n ** decimal,
+        tokenId: mainnetAyin,
+        decimal: decimal,
+        open: true,
+        balance: 0n,
+        feesBalance: 0n,
+        dustBalance: 0n,
+        numAttendees: 0n,
+        attendees: Array(poolSize).fill(ZERO_ADDRESS) as WayinTypes.Fields["attendees"],
+        lastWinner: ZERO_ADDRESS
+
+      },
+  })
 
 
+  console.log('Wayin contract id: ' + resultAyin.contractInstance.contractId)
+  console.log('Wayin contract address: ' + resultAyin.contractInstance.address)
 
 }
 

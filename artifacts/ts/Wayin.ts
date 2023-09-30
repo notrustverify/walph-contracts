@@ -24,34 +24,24 @@ import {
   ContractInstance,
   getContractEventsCurrentCount,
 } from "@alephium/web3";
-import { default as WalfContractJson } from "../Walf.ral.json";
+import { default as WayinContractJson } from "../Wayin.ral.json";
 import { getContractByCodeHash } from "./contracts";
 
 // Custom types for the contract
-export namespace WalfTypes {
+export namespace WayinTypes {
   export type Fields = {
     poolSize: bigint;
     poolOwner: Address;
     poolFees: bigint;
     tokenId: HexString;
     ticketPrice: bigint;
+    decimal: bigint;
     open: boolean;
     balance: bigint;
     feesBalance: bigint;
     dustBalance: bigint;
     numAttendees: bigint;
     attendees: [
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
-      Address,
       Address,
       Address,
       Address,
@@ -109,9 +99,9 @@ export namespace WalfTypes {
   };
 }
 
-class Factory extends ContractFactory<WalfInstance, WalfTypes.Fields> {
+class Factory extends ContractFactory<WayinInstance, WayinTypes.Fields> {
   getInitialFieldsWithDefaultValues() {
-    return this.contract.getInitialFieldsWithDefaultValues() as WalfTypes.Fields;
+    return this.contract.getInitialFieldsWithDefaultValues() as WayinTypes.Fields;
   }
 
   eventIndex = {
@@ -133,66 +123,66 @@ class Factory extends ContractFactory<WalfInstance, WalfTypes.Fields> {
     },
   };
 
-  at(address: string): WalfInstance {
-    return new WalfInstance(address);
+  at(address: string): WayinInstance {
+    return new WayinInstance(address);
   }
 
   tests = {
     random: async (
-      params: Omit<TestContractParams<WalfTypes.Fields, never>, "testArgs">
+      params: Omit<TestContractParams<WayinTypes.Fields, never>, "testArgs">
     ): Promise<TestContractResult<bigint>> => {
       return testMethod(this, "random", params);
     },
     distributePrize: async (
       params: TestContractParams<
-        WalfTypes.Fields,
+        WayinTypes.Fields,
         { lastAttendee: Address; amount: bigint }
       >
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "distributePrize", params);
     },
     getPoolState: async (
-      params: Omit<TestContractParams<WalfTypes.Fields, never>, "testArgs">
+      params: Omit<TestContractParams<WayinTypes.Fields, never>, "testArgs">
     ): Promise<TestContractResult<boolean>> => {
       return testMethod(this, "getPoolState", params);
     },
     getPoolSize: async (
-      params: Omit<TestContractParams<WalfTypes.Fields, never>, "testArgs">
+      params: Omit<TestContractParams<WayinTypes.Fields, never>, "testArgs">
     ): Promise<TestContractResult<bigint>> => {
       return testMethod(this, "getPoolSize", params);
     },
     getBalance: async (
-      params: Omit<TestContractParams<WalfTypes.Fields, never>, "testArgs">
+      params: Omit<TestContractParams<WayinTypes.Fields, never>, "testArgs">
     ): Promise<TestContractResult<bigint>> => {
       return testMethod(this, "getBalance", params);
     },
     getTicketPrice: async (
-      params: Omit<TestContractParams<WalfTypes.Fields, never>, "testArgs">
+      params: Omit<TestContractParams<WayinTypes.Fields, never>, "testArgs">
     ): Promise<TestContractResult<bigint>> => {
       return testMethod(this, "getTicketPrice", params);
     },
     withdraw: async (
-      params: Omit<TestContractParams<WalfTypes.Fields, never>, "testArgs">
+      params: Omit<TestContractParams<WayinTypes.Fields, never>, "testArgs">
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "withdraw", params);
     },
     buyTicket: async (
-      params: TestContractParams<WalfTypes.Fields, { amount: bigint }>
+      params: TestContractParams<WayinTypes.Fields, { amount: bigint }>
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "buyTicket", params);
     },
     closePool: async (
-      params: Omit<TestContractParams<WalfTypes.Fields, never>, "testArgs">
+      params: Omit<TestContractParams<WayinTypes.Fields, never>, "testArgs">
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "closePool", params);
     },
     openPool: async (
-      params: Omit<TestContractParams<WalfTypes.Fields, never>, "testArgs">
+      params: Omit<TestContractParams<WayinTypes.Fields, never>, "testArgs">
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "openPool", params);
     },
     destroyPool: async (
-      params: Omit<TestContractParams<WalfTypes.Fields, never>, "testArgs">
+      params: Omit<TestContractParams<WayinTypes.Fields, never>, "testArgs">
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "destroyPool", params);
     },
@@ -200,22 +190,22 @@ class Factory extends ContractFactory<WalfInstance, WalfTypes.Fields> {
 }
 
 // Use this object to test and deploy the contract
-export const Walf = new Factory(
+export const Wayin = new Factory(
   Contract.fromJson(
-    WalfContractJson,
-    "=6-2=2+2=1-1=3-1+8=2-2+c1=3-1+a40d3=2+d=1-1=1+1=1-2+1=2-1=1+a=3-3=1-1=3-1+54218=11-1+4=30+0016007e0207726e6420697320=1004",
-    "6670bde02683343394ad01aa60adb7bcb066ab6e502c4de3574708f20be25041"
+    WayinContractJson,
+    "=4-2=2+2=1-1=3-1+8=2-2+c1=3-1+a40d3=2+d=1-1=1+1=1-2+1=2-1=1+a=3-3=1-1=3-1+54218=11-1+4=30+0016007e0207726e6420697320=1004",
+    "81ee95c454f4cbec31aaf0bdb70df7cd3edc20e21f4befb30d80b56d6cf8d6c2"
   )
 );
 
 // Use this class to interact with the blockchain
-export class WalfInstance extends ContractInstance {
+export class WayinInstance extends ContractInstance {
   constructor(address: Address) {
     super(address);
   }
 
-  async fetchState(): Promise<WalfTypes.State> {
-    return fetchContractState(Walf, this);
+  async fetchState(): Promise<WayinTypes.State> {
+    return fetchContractState(Wayin, this);
   }
 
   async getContractEventsCurrentCount(): Promise<number> {
@@ -223,11 +213,11 @@ export class WalfInstance extends ContractInstance {
   }
 
   subscribeTicketBoughtEvent(
-    options: EventSubscribeOptions<WalfTypes.TicketBoughtEvent>,
+    options: EventSubscribeOptions<WayinTypes.TicketBoughtEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      Walf.contract,
+      Wayin.contract,
       this,
       options,
       "TicketBought",
@@ -236,11 +226,11 @@ export class WalfInstance extends ContractInstance {
   }
 
   subscribePoolOpenEvent(
-    options: EventSubscribeOptions<WalfTypes.PoolOpenEvent>,
+    options: EventSubscribeOptions<WayinTypes.PoolOpenEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      Walf.contract,
+      Wayin.contract,
       this,
       options,
       "PoolOpen",
@@ -249,11 +239,11 @@ export class WalfInstance extends ContractInstance {
   }
 
   subscribePoolCloseEvent(
-    options: EventSubscribeOptions<WalfTypes.PoolCloseEvent>,
+    options: EventSubscribeOptions<WayinTypes.PoolCloseEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      Walf.contract,
+      Wayin.contract,
       this,
       options,
       "PoolClose",
@@ -262,11 +252,11 @@ export class WalfInstance extends ContractInstance {
   }
 
   subscribeDestroyEvent(
-    options: EventSubscribeOptions<WalfTypes.DestroyEvent>,
+    options: EventSubscribeOptions<WayinTypes.DestroyEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      Walf.contract,
+      Wayin.contract,
       this,
       options,
       "Destroy",
@@ -275,11 +265,11 @@ export class WalfInstance extends ContractInstance {
   }
 
   subscribeWinnerEvent(
-    options: EventSubscribeOptions<WalfTypes.WinnerEvent>,
+    options: EventSubscribeOptions<WayinTypes.WinnerEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      Walf.contract,
+      Wayin.contract,
       this,
       options,
       "Winner",
@@ -289,23 +279,23 @@ export class WalfInstance extends ContractInstance {
 
   subscribeAllEvents(
     options: EventSubscribeOptions<
-      | WalfTypes.TicketBoughtEvent
-      | WalfTypes.PoolOpenEvent
-      | WalfTypes.PoolCloseEvent
-      | WalfTypes.DestroyEvent
-      | WalfTypes.WinnerEvent
+      | WayinTypes.TicketBoughtEvent
+      | WayinTypes.PoolOpenEvent
+      | WayinTypes.PoolCloseEvent
+      | WayinTypes.DestroyEvent
+      | WayinTypes.WinnerEvent
     >,
     fromCount?: number
   ): EventSubscription {
-    return subscribeContractEvents(Walf.contract, this, options, fromCount);
+    return subscribeContractEvents(Wayin.contract, this, options, fromCount);
   }
 
   methods = {
     getPoolState: async (
-      params?: WalfTypes.CallMethodParams<"getPoolState">
-    ): Promise<WalfTypes.CallMethodResult<"getPoolState">> => {
+      params?: WayinTypes.CallMethodParams<"getPoolState">
+    ): Promise<WayinTypes.CallMethodResult<"getPoolState">> => {
       return callMethod(
-        Walf,
+        Wayin,
         this,
         "getPoolState",
         params === undefined ? {} : params,
@@ -313,10 +303,10 @@ export class WalfInstance extends ContractInstance {
       );
     },
     getPoolSize: async (
-      params?: WalfTypes.CallMethodParams<"getPoolSize">
-    ): Promise<WalfTypes.CallMethodResult<"getPoolSize">> => {
+      params?: WayinTypes.CallMethodParams<"getPoolSize">
+    ): Promise<WayinTypes.CallMethodResult<"getPoolSize">> => {
       return callMethod(
-        Walf,
+        Wayin,
         this,
         "getPoolSize",
         params === undefined ? {} : params,
@@ -324,10 +314,10 @@ export class WalfInstance extends ContractInstance {
       );
     },
     getBalance: async (
-      params?: WalfTypes.CallMethodParams<"getBalance">
-    ): Promise<WalfTypes.CallMethodResult<"getBalance">> => {
+      params?: WayinTypes.CallMethodParams<"getBalance">
+    ): Promise<WayinTypes.CallMethodResult<"getBalance">> => {
       return callMethod(
-        Walf,
+        Wayin,
         this,
         "getBalance",
         params === undefined ? {} : params,
@@ -335,10 +325,10 @@ export class WalfInstance extends ContractInstance {
       );
     },
     getTicketPrice: async (
-      params?: WalfTypes.CallMethodParams<"getTicketPrice">
-    ): Promise<WalfTypes.CallMethodResult<"getTicketPrice">> => {
+      params?: WayinTypes.CallMethodParams<"getTicketPrice">
+    ): Promise<WayinTypes.CallMethodResult<"getTicketPrice">> => {
       return callMethod(
-        Walf,
+        Wayin,
         this,
         "getTicketPrice",
         params === undefined ? {} : params,
@@ -347,14 +337,14 @@ export class WalfInstance extends ContractInstance {
     },
   };
 
-  async multicall<Calls extends WalfTypes.MultiCallParams>(
+  async multicall<Calls extends WayinTypes.MultiCallParams>(
     calls: Calls
-  ): Promise<WalfTypes.MultiCallResults<Calls>> {
+  ): Promise<WayinTypes.MultiCallResults<Calls>> {
     return (await multicallMethods(
-      Walf,
+      Wayin,
       this,
       calls,
       getContractByCodeHash
-    )) as WalfTypes.MultiCallResults<Calls>;
+    )) as WayinTypes.MultiCallResults<Calls>;
   }
 }
