@@ -24,21 +24,23 @@ import {
   ContractInstance,
   getContractEventsCurrentCount,
 } from "@alephium/web3";
-import { default as WalphTimedContractJson } from "../WalphTimed.ral.json";
+import { default as WalphTimedTokenContractJson } from "../WalphTimedToken.ral.json";
 import { getContractByCodeHash } from "./contracts";
 
 // Custom types for the contract
-export namespace WalphTimedTypes {
+export namespace WalphTimedTokenTypes {
   export type Fields = {
     poolSize: bigint;
     poolOwner: Address;
     poolFees: bigint;
+    tokenId: HexString;
     ticketPrice: bigint;
     drawTimestamp: bigint;
     repeatEvery: bigint;
     open: boolean;
     balance: bigint;
     feesBalance: bigint;
+    dustBalance: bigint;
     numAttendees: bigint;
     attendees: [
       Address,
@@ -171,11 +173,11 @@ export namespace WalphTimedTypes {
 }
 
 class Factory extends ContractFactory<
-  WalphTimedInstance,
-  WalphTimedTypes.Fields
+  WalphTimedTokenInstance,
+  WalphTimedTokenTypes.Fields
 > {
   getInitialFieldsWithDefaultValues() {
-    return this.contract.getInitialFieldsWithDefaultValues() as WalphTimedTypes.Fields;
+    return this.contract.getInitialFieldsWithDefaultValues() as WalphTimedTokenTypes.Fields;
   }
 
   eventIndex = {
@@ -203,14 +205,14 @@ class Factory extends ContractFactory<
     },
   };
 
-  at(address: string): WalphTimedInstance {
-    return new WalphTimedInstance(address);
+  at(address: string): WalphTimedTokenInstance {
+    return new WalphTimedTokenInstance(address);
   }
 
   tests = {
     random: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<bigint>> => {
@@ -218,7 +220,7 @@ class Factory extends ContractFactory<
     },
     distributePrize: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<null>> => {
@@ -226,7 +228,7 @@ class Factory extends ContractFactory<
     },
     getPoolState: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<boolean>> => {
@@ -234,7 +236,7 @@ class Factory extends ContractFactory<
     },
     getPoolSize: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<bigint>> => {
@@ -242,7 +244,7 @@ class Factory extends ContractFactory<
     },
     getBalance: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<bigint>> => {
@@ -250,7 +252,7 @@ class Factory extends ContractFactory<
     },
     getTicketPrice: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<bigint>> => {
@@ -258,7 +260,7 @@ class Factory extends ContractFactory<
     },
     withdraw: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<null>> => {
@@ -266,20 +268,23 @@ class Factory extends ContractFactory<
     },
     draw: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "draw", params);
     },
     buyTicket: async (
-      params: TestContractParams<WalphTimedTypes.Fields, { amount: bigint }>
+      params: TestContractParams<
+        WalphTimedTokenTypes.Fields,
+        { amount: bigint }
+      >
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "buyTicket", params);
     },
     closePool: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<null>> => {
@@ -287,7 +292,7 @@ class Factory extends ContractFactory<
     },
     openPool: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<null>> => {
@@ -295,14 +300,17 @@ class Factory extends ContractFactory<
     },
     destroyPool: async (
       params: Omit<
-        TestContractParams<WalphTimedTypes.Fields, never>,
+        TestContractParams<WalphTimedTokenTypes.Fields, never>,
         "testArgs"
       >
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "destroyPool", params);
     },
     changeRepeatEvery: async (
-      params: TestContractParams<WalphTimedTypes.Fields, { newRepeat: bigint }>
+      params: TestContractParams<
+        WalphTimedTokenTypes.Fields,
+        { newRepeat: bigint }
+      >
     ): Promise<TestContractResult<null>> => {
       return testMethod(this, "changeRepeatEvery", params);
     },
@@ -310,22 +318,22 @@ class Factory extends ContractFactory<
 }
 
 // Use this object to test and deploy the contract
-export const WalphTimed = new Factory(
+export const WalphTimedToken = new Factory(
   Contract.fromJson(
-    WalphTimedContractJson,
-    "=6-2=2-2+2a=3-1+b=3-1+4=3-1+d=3-1+6=2-2+bf=1-1=2+a=2-3=2+4=1+99=2-2+ae=3-1+4=3-1+741ec=11-1+4=30+0016007e0207726e6420697320=916",
-    "924dfe23e06e7aaec08c36d062319780ac0b875a93bdc019af8300d1c1f7497e"
+    WalphTimedTokenContractJson,
+    "=6-2=2-1+2=4-1+7=2-1=1+0=3-1+9=2-2+d2=2-2+db=2-1+0=3-2+54=2+e=1-1=3-1+4=2+1a4=1-1+2d42=2-2=11-1+4=30+0016007e0207726e6420697320=1088",
+    "be17dfea50a0d52ed6332d4a9df3d5d9f563794bb45535d2baec637752995c8c"
   )
 );
 
 // Use this class to interact with the blockchain
-export class WalphTimedInstance extends ContractInstance {
+export class WalphTimedTokenInstance extends ContractInstance {
   constructor(address: Address) {
     super(address);
   }
 
-  async fetchState(): Promise<WalphTimedTypes.State> {
-    return fetchContractState(WalphTimed, this);
+  async fetchState(): Promise<WalphTimedTokenTypes.State> {
+    return fetchContractState(WalphTimedToken, this);
   }
 
   async getContractEventsCurrentCount(): Promise<number> {
@@ -333,11 +341,11 @@ export class WalphTimedInstance extends ContractInstance {
   }
 
   subscribeTicketBoughtEvent(
-    options: EventSubscribeOptions<WalphTimedTypes.TicketBoughtEvent>,
+    options: EventSubscribeOptions<WalphTimedTokenTypes.TicketBoughtEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      WalphTimed.contract,
+      WalphTimedToken.contract,
       this,
       options,
       "TicketBought",
@@ -346,11 +354,11 @@ export class WalphTimedInstance extends ContractInstance {
   }
 
   subscribePoolOpenEvent(
-    options: EventSubscribeOptions<WalphTimedTypes.PoolOpenEvent>,
+    options: EventSubscribeOptions<WalphTimedTokenTypes.PoolOpenEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      WalphTimed.contract,
+      WalphTimedToken.contract,
       this,
       options,
       "PoolOpen",
@@ -359,11 +367,11 @@ export class WalphTimedInstance extends ContractInstance {
   }
 
   subscribePoolCloseEvent(
-    options: EventSubscribeOptions<WalphTimedTypes.PoolCloseEvent>,
+    options: EventSubscribeOptions<WalphTimedTokenTypes.PoolCloseEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      WalphTimed.contract,
+      WalphTimedToken.contract,
       this,
       options,
       "PoolClose",
@@ -372,11 +380,11 @@ export class WalphTimedInstance extends ContractInstance {
   }
 
   subscribeDestroyEvent(
-    options: EventSubscribeOptions<WalphTimedTypes.DestroyEvent>,
+    options: EventSubscribeOptions<WalphTimedTokenTypes.DestroyEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      WalphTimed.contract,
+      WalphTimedToken.contract,
       this,
       options,
       "Destroy",
@@ -385,11 +393,11 @@ export class WalphTimedInstance extends ContractInstance {
   }
 
   subscribeWinnerEvent(
-    options: EventSubscribeOptions<WalphTimedTypes.WinnerEvent>,
+    options: EventSubscribeOptions<WalphTimedTokenTypes.WinnerEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      WalphTimed.contract,
+      WalphTimedToken.contract,
       this,
       options,
       "Winner",
@@ -398,11 +406,11 @@ export class WalphTimedInstance extends ContractInstance {
   }
 
   subscribePoolDrawnEvent(
-    options: EventSubscribeOptions<WalphTimedTypes.PoolDrawnEvent>,
+    options: EventSubscribeOptions<WalphTimedTokenTypes.PoolDrawnEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      WalphTimed.contract,
+      WalphTimedToken.contract,
       this,
       options,
       "PoolDrawn",
@@ -411,11 +419,11 @@ export class WalphTimedInstance extends ContractInstance {
   }
 
   subscribeNewRepeatEveryEvent(
-    options: EventSubscribeOptions<WalphTimedTypes.NewRepeatEveryEvent>,
+    options: EventSubscribeOptions<WalphTimedTokenTypes.NewRepeatEveryEvent>,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvent(
-      WalphTimed.contract,
+      WalphTimedToken.contract,
       this,
       options,
       "NewRepeatEvery",
@@ -425,18 +433,18 @@ export class WalphTimedInstance extends ContractInstance {
 
   subscribeAllEvents(
     options: EventSubscribeOptions<
-      | WalphTimedTypes.TicketBoughtEvent
-      | WalphTimedTypes.PoolOpenEvent
-      | WalphTimedTypes.PoolCloseEvent
-      | WalphTimedTypes.DestroyEvent
-      | WalphTimedTypes.WinnerEvent
-      | WalphTimedTypes.PoolDrawnEvent
-      | WalphTimedTypes.NewRepeatEveryEvent
+      | WalphTimedTokenTypes.TicketBoughtEvent
+      | WalphTimedTokenTypes.PoolOpenEvent
+      | WalphTimedTokenTypes.PoolCloseEvent
+      | WalphTimedTokenTypes.DestroyEvent
+      | WalphTimedTokenTypes.WinnerEvent
+      | WalphTimedTokenTypes.PoolDrawnEvent
+      | WalphTimedTokenTypes.NewRepeatEveryEvent
     >,
     fromCount?: number
   ): EventSubscription {
     return subscribeContractEvents(
-      WalphTimed.contract,
+      WalphTimedToken.contract,
       this,
       options,
       fromCount
@@ -445,10 +453,10 @@ export class WalphTimedInstance extends ContractInstance {
 
   methods = {
     getPoolState: async (
-      params?: WalphTimedTypes.CallMethodParams<"getPoolState">
-    ): Promise<WalphTimedTypes.CallMethodResult<"getPoolState">> => {
+      params?: WalphTimedTokenTypes.CallMethodParams<"getPoolState">
+    ): Promise<WalphTimedTokenTypes.CallMethodResult<"getPoolState">> => {
       return callMethod(
-        WalphTimed,
+        WalphTimedToken,
         this,
         "getPoolState",
         params === undefined ? {} : params,
@@ -456,10 +464,10 @@ export class WalphTimedInstance extends ContractInstance {
       );
     },
     getPoolSize: async (
-      params?: WalphTimedTypes.CallMethodParams<"getPoolSize">
-    ): Promise<WalphTimedTypes.CallMethodResult<"getPoolSize">> => {
+      params?: WalphTimedTokenTypes.CallMethodParams<"getPoolSize">
+    ): Promise<WalphTimedTokenTypes.CallMethodResult<"getPoolSize">> => {
       return callMethod(
-        WalphTimed,
+        WalphTimedToken,
         this,
         "getPoolSize",
         params === undefined ? {} : params,
@@ -467,10 +475,10 @@ export class WalphTimedInstance extends ContractInstance {
       );
     },
     getBalance: async (
-      params?: WalphTimedTypes.CallMethodParams<"getBalance">
-    ): Promise<WalphTimedTypes.CallMethodResult<"getBalance">> => {
+      params?: WalphTimedTokenTypes.CallMethodParams<"getBalance">
+    ): Promise<WalphTimedTokenTypes.CallMethodResult<"getBalance">> => {
       return callMethod(
-        WalphTimed,
+        WalphTimedToken,
         this,
         "getBalance",
         params === undefined ? {} : params,
@@ -478,10 +486,10 @@ export class WalphTimedInstance extends ContractInstance {
       );
     },
     getTicketPrice: async (
-      params?: WalphTimedTypes.CallMethodParams<"getTicketPrice">
-    ): Promise<WalphTimedTypes.CallMethodResult<"getTicketPrice">> => {
+      params?: WalphTimedTokenTypes.CallMethodParams<"getTicketPrice">
+    ): Promise<WalphTimedTokenTypes.CallMethodResult<"getTicketPrice">> => {
       return callMethod(
-        WalphTimed,
+        WalphTimedToken,
         this,
         "getTicketPrice",
         params === undefined ? {} : params,
@@ -490,14 +498,14 @@ export class WalphTimedInstance extends ContractInstance {
     },
   };
 
-  async multicall<Calls extends WalphTimedTypes.MultiCallParams>(
+  async multicall<Calls extends WalphTimedTokenTypes.MultiCallParams>(
     calls: Calls
-  ): Promise<WalphTimedTypes.MultiCallResults<Calls>> {
+  ): Promise<WalphTimedTokenTypes.MultiCallResults<Calls>> {
     return (await multicallMethods(
-      WalphTimed,
+      WalphTimedToken,
       this,
       calls,
       getContractByCodeHash
-    )) as WalphTimedTypes.MultiCallResults<Calls>;
+    )) as WalphTimedTokenTypes.MultiCallResults<Calls>;
   }
 }

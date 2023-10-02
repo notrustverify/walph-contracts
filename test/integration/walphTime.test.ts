@@ -4,7 +4,7 @@ import { WalphTimed, Buy, Open,Close, WalphTimedTypes, Destroy, BuyWithoutToken,
 import configuration, { Settings } from '../../alephium.config'
 import * as dotenv from 'dotenv'
 import { waitTxConfirmed } from '@alephium/cli'
-import { getSigner, testPrivateKey, transfer } from '@alephium/web3-test'
+import { expectAssertionError, getSigner, mintToken, testPrivateKey, transfer } from '@alephium/web3-test'
 
 dotenv.config()
 
@@ -32,25 +32,26 @@ describe('integration tests', () => {
   })
   
   jest.setTimeout(100000)
-  it('should test Blitz', async () => {
+  it('should test Blitz with token', async () => {
     
     const deployResult = await WalphTimed.deploy(
       signer,
       {
         initialFields: {
-            poolSize: 10n * 10n ** 18n,
-            poolOwner: signerAddress,
-            poolFees: 1n,
-            ticketPrice: 10n ** 18n,
-            minTokenAmountToHold: 0n,
-            tokenIdToHold: tokenIdToHold,
-            drawTimestamp: BigInt(Date.now()+5000),
-            open: true,
-            balance: 0n,
-            feesBalance: 0n,
-            numAttendees: 0n,
-            attendees: Array(10).fill(ZERO_ADDRESS) as WalphTimedTypes.Fields["attendees"],
-            lastWinner: ZERO_ADDRESS
+          poolSize: 80n * 10n ** 18n,
+          poolOwner: signer.address,
+          poolFees: 1n,
+          ticketPrice: 10n ** 18n,
+          open: true,
+          balance: 0n,
+          feesBalance: 0n,
+          numAttendees: 0n,
+          drawTimestamp: BigInt(Date.now()+30000),
+          repeatEvery: BigInt(5*1000),
+          attendees: Array(80).fill(
+            ZERO_ADDRESS
+          ) as WalphTimedTypes.Fields["attendees"],
+          lastWinner: ZERO_ADDRESS,
 
           },
       }
@@ -72,7 +73,7 @@ describe('integration tests', () => {
     expect(initialBalance).toEqual(0n)
 
     const getPoolSize = await walph.methods.getPoolSize()
-    expect(getPoolSize.returns).toEqual(10n * 10n ** 18n)
+    expect(getPoolSize.returns).toEqual(80n * 10n ** 18n)
   
     const ticketBoughtEvents: WalphTimedTypes.TicketBoughtEvent[] = []
     const subscription = walph.subscribeTicketBoughtEvent({
@@ -94,7 +95,7 @@ describe('integration tests', () => {
       const firstAttendee = await getSigner()
       await transfer(signer,firstAttendee.address,ALPH_TOKEN_ID, 200n * ONE_ALPH)
       // simulate someone buying tickets
-      for (let i = 0; i < 9; i++) {
+      for (let i = 0; i < 77; i++) {
         await BuyTimedWithoutToken.execute(firstAttendee, {
           initialFields: {walphContract: walphleContractId , amount: ONE_ALPH},
           attoAlphAmount:  ONE_ALPH + 2n * DUST_AMOUNT,
@@ -109,14 +110,23 @@ describe('integration tests', () => {
       const afterPoolFullNumAttendeesState = afterPoolFull.fields.numAttendees
       const afterPoolFullAttendeesState = afterPoolFull.fields.attendees
 
-
+      //testing if draw is working
+      expectAssertionError(
+        Draw.execute(signer, {
+          initialFields: {walphContract: walphleContractId},
+          attoAlphAmount: DUST_AMOUNT,
+        }), walphContractAddress, 8
+      )
       console.log("Pool state: "+afterPoolFullOpenState + " Balance: "+afterPoolFullBalanceState/10n**18n+ " Attendees: " + afterPoolFullAttendeesState)
-      let expectedArray = Array(9).fill(firstAttendee.address) as WalphTimedTypes.Fields["attendees"]
-      expectedArray[9] = ZERO_ADDRESS
+      let expectedArray = Array(80).fill(firstAttendee.address) as WalphTimedTypes.Fields["attendees"]
+      expectedArray[77] = ZERO_ADDRESS
+      expectedArray[78] = ZERO_ADDRESS
+      expectedArray[79] = ZERO_ADDRESS
+
 
       expect(afterPoolFullOpenState).toEqual(true)
-      expect(afterPoolFullBalanceState).toEqual(9n * 10n ** 18n)
-      expect(afterPoolFullNumAttendeesState).toEqual(9n)
+      expect(afterPoolFullBalanceState).toEqual(77n * 10n ** 18n)
+      expect(afterPoolFullNumAttendeesState).toEqual(77n)
       expect(afterPoolFullAttendeesState).toEqual(expectedArray)
 
 
@@ -146,7 +156,7 @@ describe('integration tests', () => {
 
 
       const contractAfterPoolDistributionBalance = await web3.getCurrentNodeProvider().addresses.getAddressesAddressBalance(walphContractAddress)
-      expect(contractAfterPoolDistributionBalance.balanceHint).toEqual("1.1 ALPH")
+      expect(contractAfterPoolDistributionBalance.balanceHint).toEqual("1.78 ALPH")
       const winnerBalance = await web3.getCurrentNodeProvider().addresses.getAddressesAddressBalance(signer.address)
 
 
