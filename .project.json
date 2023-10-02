@@ -11,28 +11,35 @@
   "infos": {
     "Buy": {
       "sourceFile": "buyTicket.ral",
-      "sourceCodeHash": "d3729ce19cca1f2d822b1f74cfa33fc7d58d2bf47130b8d2b1369e49af97ed26",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []
     },
     "BuyTicketToken": {
       "sourceFile": "buyTicket.ral",
-      "sourceCodeHash": "d3729ce19cca1f2d822b1f74cfa33fc7d58d2bf47130b8d2b1369e49af97ed26",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "BuyTimedWithToken": {
+      "sourceFile": "buyTicket.ral",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []
     },
     "BuyTimedWithoutToken": {
       "sourceFile": "buyTicket.ral",
-      "sourceCodeHash": "d3729ce19cca1f2d822b1f74cfa33fc7d58d2bf47130b8d2b1369e49af97ed26",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []
     },
     "BuyWithoutToken": {
       "sourceFile": "buyTicket.ral",
-      "sourceCodeHash": "d3729ce19cca1f2d822b1f74cfa33fc7d58d2bf47130b8d2b1369e49af97ed26",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []
@@ -95,9 +102,9 @@
     },
     "WalphTimed": {
       "sourceFile": "walphTimed.ral",
-      "sourceCodeHash": "8c059f9caf036ef4f73d24b6476a86a85260da121f8857ff86e694bdc800c2d0",
+      "sourceCodeHash": "935fb9f609d128dd10d59405d9355a30e497939368bd0525c554859ac31c993f",
       "bytecodeDebugPatch": "=6-2=2-2+2a=3-1+b=3-1+4=3-1+d=3-1+6=2-2+bf=1-1=2+a=2-3=2+4=1+99=2-2+ae=3-1+4=3-1+741ec=11-1+4=30+0016007e0207726e6420697320=916",
-      "codeHashDebug": "924dfe23e06e7aaec08c36d062319780ac0b875a93bdc019af8300d1c1f7497e",
+      "codeHashDebug": "7b688b969bb6022f5e933de384029e4eab5ec16cdc6587eb3a8343a6d1f404ea",
       "warnings": []
     },
     "WalphTimedToken": {

@@ -10,9 +10,9 @@ const deployWalph: DeployFunction<Settings> = async (
   deployer: Deployer
 ): Promise<void> => {
  
-
-  const mainnetAlf = "66da610efb5129c062e88e5fd65fe810f31efd1597021b2edf887a4360fa0800"
-  let poolSize = 80
+  //const alf = (await mintToken(deployer.account.address, 2000n * 10n ** 18n)).contractId
+  //const mainnetAlf = "66da610efb5129c062e88e5fd65fe810f31efd1597021b2edf887a4360fa0800"
+  let poolSize = 90
 
   let ticketPrice = 5
   let repeatEvery = 86400*1000
@@ -43,9 +43,7 @@ const deployWalph: DeployFunction<Settings> = async (
 
   poolSize = 10
   ticketPrice = 1
-  //const testnetAlf = (await mintToken(deployer.account.address, 2000n * 10n ** 18n)).contractId
   const mainnetAyin = "1a281053ba8601a658368594da034c2e99a0fb951b86498d05e76aedfe666800"
-  const decimal = 18n
 
   ticketPrice = 5
   drawTimestamp = BigInt(Date.now()+259200*1000)
@@ -58,8 +56,6 @@ const deployWalph: DeployFunction<Settings> = async (
         ticketPrice: BigInt(ticketPrice) * 10n ** 18n,
         open: true,
         balance: 0n,
-        tokenIdToHold: "",
-        minTokenAmountToHold: 0n,
         feesBalance: 0n,
         numAttendees: 0n,
         drawTimestamp: drawTimestamp,

@@ -1,6 +1,6 @@
 import { web3, Project, stringToHex, ONE_ALPH, DUST_AMOUNT, sleep, ZERO_ADDRESS, sign, ALPH_TOKEN_ID } from '@alephium/web3'
 import { NodeWallet, PrivateKeyWallet } from '@alephium/web3-wallet'
-import { WalphTimedToken, Buy, Open,Close, WalphTimedTokenTypes, Destroy, BuyWithoutToken, WithdrawFees, Draw, BuyTimedWithoutToken, DestroyBlitz } from '../../artifacts/ts'
+import { WalphTimedToken, Buy, Open,Close, WalphTimedTokenTypes, Destroy, BuyWithoutToken, WithdrawFees, Draw, BuyTimedWithoutToken, DestroyBlitz, BuyTimedWithToken } from '../../artifacts/ts'
 import configuration, { Settings } from '../../alephium.config'
 import * as dotenv from 'dotenv'
 import { waitTxConfirmed } from '@alephium/cli'
@@ -33,7 +33,7 @@ describe('integration tests', () => {
   
   jest.setTimeout(100000)
   it('should test Blitz', async () => {
-    const tokenTest = await mintToken(signer.address, 2000n * 10n ** 9n)
+    const tokenTest = await mintToken(signer.address, 2000n * 10n ** 18n)
 
     const deployResult = await WalphTimedToken.deploy(
       signer,
@@ -96,12 +96,14 @@ describe('integration tests', () => {
       expect(parseInt(contractBalance.balance)).toBeGreaterThanOrEqual(ONE_ALPH)
 
       const firstAttendee = await getSigner()
-      await transfer(signer,firstAttendee.address,ALPH_TOKEN_ID, 200n * ONE_ALPH)
+      await transfer(signer,firstAttendee.address,ALPH_TOKEN_ID, 20n * ONE_ALPH)
+      await transfer(signer, firstAttendee.address, tokenTest.contractId, 100n *10n ** 18n)
+
       // simulate someone buying tickets
       for (let i = 0; i < 77; i++) {
-        await BuyTimedWithoutToken.execute(firstAttendee, {
-          initialFields: {walphContract: walphleContractId , amount: ONE_ALPH},
-          tokens: [{ id: tokenTest.contractId, amount: BigInt(1n * 10n ** 9n) }],
+        await BuyTimedWithToken.execute(firstAttendee, {
+          initialFields: {walphContract: walphleContractId, amount: ONE_ALPH, tokenId: tokenTest.contractId},
+          tokens: [{ id: tokenTest.contractId, amount: BigInt(1n * 10n ** 18n) }],
           attoAlphAmount:  ONE_ALPH + 2n * DUST_AMOUNT,
           
         })
@@ -139,9 +141,11 @@ describe('integration tests', () => {
       //buy last ticket to draw the pool
       const lastOne = await getSigner()
       await transfer(signer, lastOne.address, ALPH_TOKEN_ID, 100n *ONE_ALPH)
-      await BuyTimedWithoutToken.execute(lastOne, {
-        initialFields: {walphContract: walphleContractId , amount: ONE_ALPH},
-        attoAlphAmount: ONE_ALPH + DUST_AMOUNT,
+      await transfer(signer, lastOne.address, tokenTest.contractId, 100n *10n ** 18n)
+      await BuyTimedWithToken.execute(firstAttendee, {
+        initialFields: {walphContract: walphleContractId, amount: ONE_ALPH, tokenId: tokenTest.contractId},
+        tokens: [{ id: tokenTest.contractId, amount: BigInt(1n * 10n ** 18n) }],
+        attoAlphAmount:  ONE_ALPH + 2n * DUST_AMOUNT,
         
       })
 
@@ -159,8 +163,9 @@ describe('integration tests', () => {
       })
 
 
-      const contractAfterPoolDistributionBalance = await web3.getCurrentNodeProvider().addresses.getAddressesAddressBalance(walphContractAddress)
-      expect(contractAfterPoolDistributionBalance.balanceHint).toEqual("1.78 ALPH")
+      let contractAfterPoolDistributionBalance
+      contractAfterPoolDistributionBalance = await web3.getCurrentNodeProvider().addresses.getAddressesAddressBalance(walphContractAddress)
+      expect(parseInt(contractAfterPoolDistributionBalance.tokenBalances[0].amount)).toEqual(780000000000000000)
       const winnerBalance = await web3.getCurrentNodeProvider().addresses.getAddressesAddressBalance(signer.address)
 
 
@@ -170,7 +175,7 @@ describe('integration tests', () => {
       const afterPoolDistributionNumAttendeesState = afterPoolDistribution.fields.numAttendees
       const afterPoolDistributionWinner = afterPoolDistribution.fields.lastWinner
 
-      console.log("Pool state: "+afterPoolDistributionOpenState + " Balance: "+afterPoolDistributionBalanceState/10n**18n + " Fields: "+ JSON.stringify(afterPoolDistribution.fields))
+      console.log("Pool state: "+afterPoolDistributionOpenState + " Balance: "+afterPoolDistributionBalanceState/10n**18n)
       expect(afterPoolDistributionOpenState).toEqual(true)
       expect(afterPoolDistributionBalanceState).toEqual(0n)
       expect(afterPoolDistributionNumAttendeesState).toEqual(0n)
@@ -186,7 +191,7 @@ describe('integration tests', () => {
       const afterWhitdraw = await walphleDeployed.fetchState()
       expect(afterWhitdraw.fields.feesBalance).toEqual(0n)
       const afterWhitdrawBalance = await web3.getCurrentNodeProvider().addresses.getAddressesAddressBalance(walphContractAddress)
-      expect(afterWhitdrawBalance.balanceHint).toEqual("1 ALPH")
+      expect(afterWhitdrawBalance.balanceHint).toEqual("1.001 ALPH")
 
      await DestroyBlitz.execute(signer, {
         initialFields: { walphContract: walphleContractId},

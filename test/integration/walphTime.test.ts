@@ -166,7 +166,7 @@ describe('integration tests', () => {
       const afterPoolDistributionNumAttendeesState = afterPoolDistribution.fields.numAttendees
       const afterPoolDistributionWinner = afterPoolDistribution.fields.lastWinner
 
-      console.log("Pool state: "+afterPoolDistributionOpenState + " Balance: "+afterPoolDistributionBalanceState/10n**18n + " Fields: "+ JSON.stringify(afterPoolDistribution.fields))
+      console.log("Pool state: "+afterPoolDistributionOpenState + " Balance: "+afterPoolDistributionBalanceState/10n**18n)
       expect(afterPoolDistributionOpenState).toEqual(true)
       expect(afterPoolDistributionBalanceState).toEqual(0n)
       expect(afterPoolDistributionNumAttendeesState).toEqual(0n)
