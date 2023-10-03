@@ -23,40 +23,49 @@ import { default as devnetDeployments } from "../.deployments.devnet.json";
 export type Deployments = {
   deployerAddress: string;
   contracts: {
-    Walph: DeployContractExecutionResult<WalphInstance>;
-    Walph50HodlAlf: DeployContractExecutionResult<Walph50HodlAlfInstance>;
-    Walf: DeployContractExecutionResult<WalfInstance>;
     WalphTimed: DeployContractExecutionResult<WalphTimedInstance>;
+    Walph?: DeployContractExecutionResult<WalphInstance>;
+    Walph50HodlAlf?: DeployContractExecutionResult<Walph50HodlAlfInstance>;
+    Walf?: DeployContractExecutionResult<WalfInstance>;
     Wayin?: DeployContractExecutionResult<WayinInstance>;
   };
 };
 
 function toDeployments(json: any): Deployments {
   const contracts = {
-    Walph: {
-      ...json.contracts["Walph"],
-      contractInstance: Walph.at(
-        json.contracts["Walph"].contractInstance.address
-      ),
-    },
-    Walph50HodlAlf: {
-      ...json.contracts["Walph50HodlAlf"],
-      contractInstance: Walph50HodlAlf.at(
-        json.contracts["Walph50HodlAlf"].contractInstance.address
-      ),
-    },
-    Walf: {
-      ...json.contracts["Walf"],
-      contractInstance: Walf.at(
-        json.contracts["Walf"].contractInstance.address
-      ),
-    },
     WalphTimed: {
       ...json.contracts["WalphTimed"],
       contractInstance: WalphTimed.at(
         json.contracts["WalphTimed"].contractInstance.address
       ),
     },
+    Walph:
+      json.contracts["Walph"] === undefined
+        ? undefined
+        : {
+            ...json.contracts["Walph"],
+            contractInstance: Walph.at(
+              json.contracts["Walph"].contractInstance.address
+            ),
+          },
+    Walph50HodlAlf:
+      json.contracts["Walph50HodlAlf"] === undefined
+        ? undefined
+        : {
+            ...json.contracts["Walph50HodlAlf"],
+            contractInstance: Walph50HodlAlf.at(
+              json.contracts["Walph50HodlAlf"].contractInstance.address
+            ),
+          },
+    Walf:
+      json.contracts["Walf"] === undefined
+        ? undefined
+        : {
+            ...json.contracts["Walf"],
+            contractInstance: Walf.at(
+              json.contracts["Walf"].contractInstance.address
+            ),
+          },
     Wayin:
       json.contracts["Wayin"] === undefined
         ? undefined

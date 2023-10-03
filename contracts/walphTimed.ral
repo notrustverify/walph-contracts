@@ -9,7 +9,7 @@ Contract WalphTimed(
     mut balance: U256,
     mut feesBalance: U256,
     mut numAttendees: U256,
-    mut attendees: [Address;90],
+    mut attendees: [Address;85],
     mut lastWinner: Address
 ){
     

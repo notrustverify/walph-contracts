@@ -12,7 +12,7 @@ const deployWalph: DeployFunction<Settings> = async (
  
   //const alf = (await mintToken(deployer.account.address, 2000n * 10n ** 18n)).contractId
   //const mainnetAlf = "66da610efb5129c062e88e5fd65fe810f31efd1597021b2edf887a4360fa0800"
-  let poolSize = 90
+  const poolSize = 85
 
   let ticketPrice = 5
   let repeatEvery = 86400*1000
@@ -41,12 +41,12 @@ const deployWalph: DeployFunction<Settings> = async (
   console.log('Walph Timed 1d contract id: ' + resultTimedWalph.contractInstance.contractId)
   console.log('Walph Timed 1d contract address: ' + resultTimedWalph.contractInstance.address)
 
-  poolSize = 10
-  ticketPrice = 1
+  ticketPrice = 10
   const mainnetAyin = "1a281053ba8601a658368594da034c2e99a0fb951b86498d05e76aedfe666800"
 
   ticketPrice = 5
-  drawTimestamp = BigInt(Date.now()+259200*1000)
+  repeatEvery = 259200*1000
+  drawTimestamp = BigInt(Date.now()+repeatEvery)
   const resultTimedThreeDaysWalph = await deployer.deployContract(WalphTimed, {
     // The initial states of the faucet contract
     initialFields: {
@@ -59,7 +59,7 @@ const deployWalph: DeployFunction<Settings> = async (
         feesBalance: 0n,
         numAttendees: 0n,
         drawTimestamp: drawTimestamp,
-        repeatEvery: drawTimestamp,
+        repeatEvery: BigInt(repeatEvery),
         attendees: Array(poolSize).fill(ZERO_ADDRESS) as WalphTimedTypes.Fields["attendees"],
         lastWinner: ZERO_ADDRESS
 
