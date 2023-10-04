@@ -34,7 +34,7 @@ const deployWalph: DeployFunction<Settings> = async (
         lastWinner: ZERO_ADDRESS
 
       },
-  })
+  },"BlitzOneDay")
 
 
   console.log("First draw in: "+ new Date(Number(drawTimestamp)))
@@ -42,9 +42,6 @@ const deployWalph: DeployFunction<Settings> = async (
   console.log('Walph Timed 1d contract address: ' + resultTimedWalph.contractInstance.address)
 
   ticketPrice = 10
-  const mainnetAyin = "1a281053ba8601a658368594da034c2e99a0fb951b86498d05e76aedfe666800"
-
-  ticketPrice = 5
   repeatEvery = 259200*1000
   drawTimestamp = BigInt(Date.now()+repeatEvery)
   const resultTimedThreeDaysWalph = await deployer.deployContract(WalphTimed, {
@@ -64,7 +61,7 @@ const deployWalph: DeployFunction<Settings> = async (
         lastWinner: ZERO_ADDRESS
 
       },
-  })
+  },"BlitzThreeDays")
 
 
   console.log("First draw in: "+ new Date(Number(drawTimestamp)))
