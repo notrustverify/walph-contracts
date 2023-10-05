@@ -10,7 +10,7 @@ import {
 } from "@alephium/web3";
 import { PrivateKeyWallet } from "@alephium/web3-wallet";
 import configuration from "../alephium.config";
-import { Destroy, Draw, Walph, WalphTimed, WalphTimedTypes, WithdrawFees } from "../artifacts/ts";
+import { Destroy, Draw, Walph, WalphTimedToken, WalphTimedTokenTypes, WithdrawFees } from "../artifacts/ts";
 
 // The `TokenFaucetTypes.WithdrawEvent` is generated in the getting-started guide
 
@@ -39,22 +39,24 @@ async function draw(privKey: string, group: number, contractName: string) {
 
   const drawChecker = async function() {
     const balanceContract = await nodeProvider.addresses.getAddressesAddressBalance(walpheContractAddress)
-    console.log(walpheContractAddress+" - Balance contract is " + balanceContract.balanceHint )
+    console.log(walpheContractAddress+" - Balance contract is " + JSON.stringify(balanceContract.tokenBalances) )
 
-    const WalphState = WalphTimed.at(walpheContractAddress)
+    const WalphState = WalphTimedToken.at(walpheContractAddress)
 
     const initialState = await WalphState.fetchState()
 
     const poolSize = initialState.fields.poolSize / initialState.fields.ticketPrice
+
     
     console.log(walpheContractAddress + " - Next draw: "+ new Date(Number(initialState.fields.drawTimestamp)))
+
     if (initialState.fields.drawTimestamp <= Date.now() || initialState.fields.numAttendees >= poolSize && !drawInProgress ){
         drawInProgress = true
 
       if (initialState.fields.numAttendees >= poolSize)
-        console.log("drawn because pool full, numAttendees "+ initialState.fields.numAttendees)
+        console.log(walpheContractAddress+" - "+"drawn because pool full, numAttendees "+ initialState.fields.numAttendees)
       else
-        console.log("drawn because timed out")
+        console.log(walpheContractAddress+" - "+"drawn because timed out")
 
     const txDraw = await Draw.execute(wallet, {
       initialFields: { walphContract: walpheContractId},
@@ -92,8 +94,9 @@ const numberOfKeys = configuration.networks[networkToUse].privateKeys.length
 Array.from(Array(numberOfKeys).keys()).forEach((group) => {
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph50HodlAlf");
-  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimed:BlitzOneDay");
-  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimed:BlitzOneDayOneAlph");
-  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimed:BlitzThreeDays");
+
+  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimedToken:BlitzThreeDaysAlf");
+  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimedToken:BlitzThreeDaysAyin");
+
   
 });

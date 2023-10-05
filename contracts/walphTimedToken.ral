@@ -23,6 +23,8 @@ Contract WalphTimedToken(
     event Winner(address: Address)
     event PoolDrawn(amount: U256)
     event NewRepeatEvery(newRepeat: U256)
+    event PoolFull()
+
 
     enum ErrorCodes {
         PoolFull = 0
@@ -138,7 +140,9 @@ Contract WalphTimedToken(
         }
 
         emit TicketBought(caller, amount)
-
+        if(balance + amount >= poolSize){
+            emit PoolFull()
+        }
         // used to check if the amount added will close the pool
         feesBalance = feesBalance + amount * poolFees/100
         dustBalance = dustBalance + dustAmount!()

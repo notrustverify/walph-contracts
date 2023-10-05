@@ -102,16 +102,16 @@
     },
     "WalphTimed": {
       "sourceFile": "walphTimed.ral",
-      "sourceCodeHash": "6313736dd9a28531521335c50a497570bef5a660db2e37de9a3856b640df1865",
-      "bytecodeDebugPatch": "=6-2=2-2+2a=3-1+b=3-1+4=3-1+d=3-1+6=2-2+bf=1-1=2+a=2-3=2+4=1+99=2-2+ae=3-1+4=3-1+741ec=11-1+4=30+0016007e0207726e6420697320=916",
-      "codeHashDebug": "4f7042514878cde5171136bf4d7081721e29b642020af02c2e33a04e3f4c0fd0",
+      "sourceCodeHash": "8d7441be2f31c76fc8fd034882d0606e530b3daed908671a41a3a47e513adff2",
+      "bytecodeDebugPatch": "=6-2=2-2+2a=3-1+b=3-1+4=3-1+d=3-1+6=2-2+bf=1-1=2+a=2-3=2-1=2-1+a6=1+1bb=3-1+1=3-1+441f9=11-1+4=30+0016007e0207726e6420697320=942",
+      "codeHashDebug": "357d515107b7bec934715fb92984d3ab81344f7e4d8b712a15107e399316ba23",
       "warnings": []
     },
     "WalphTimedToken": {
       "sourceFile": "walphTimedToken.ral",
-      "sourceCodeHash": "d6b9c6b001c9ab5059d45449fe21001ea485d053e463cdfcfe33c52e3d2d5c6e",
-      "bytecodeDebugPatch": "=6-2=2-1+2=4-1+7=2-1=1+0=3-1+9=2-2+d2=2-2+db=2-1+0=3-2+54=2+e=1-1=3-1+4=2+1a4=1-1+2d42=2-2=11-1+4=30+0016007e0207726e6420697320=1088",
-      "codeHashDebug": "8942f2c6a3023711feaade805a5acc42a18d0c77f0e80fdcbd26af6bc1c8a0b6",
+      "sourceCodeHash": "f8fd7f5ce8fa8d691c4b51140bb3045e06181256862d750ddfdd82ac17024093",
+      "bytecodeDebugPatch": "=6-2=2-1+2=4-1+7=2-1=1+0=3-1+9=2-2+d2=2-2+db=2-1+0=3-2+5=1-2=1+1fc=3-1+1=3-1+7=2+3a=2+4f=11-1+4=30+0016007e0207726e6420697320=1114",
+      "codeHashDebug": "a4be006787d53653d252eda4baeecb407e1137fc30f83e715e742e8edf7db863",
       "warnings": []
     },
     "Wayin": {
