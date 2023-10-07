@@ -10,7 +10,7 @@ import {
 } from "@alephium/web3";
 import { PrivateKeyWallet } from "@alephium/web3-wallet";
 import configuration from "../alephium.config";
-import { Destroy, Draw, Walph, WalphTimed, WalphTimedTypes, WithdrawFees } from "../artifacts/ts";
+import { Destroy, Draw, Walph, WalphTimed, WalphTimedTypes, WalphTimedToken, WithdrawFees } from "../artifacts/ts";
 
 // The `TokenFaucetTypes.WithdrawEvent` is generated in the getting-started guide
 
@@ -37,17 +37,24 @@ async function draw(privKey: string, group: number, contractName: string) {
   const walpheContractAddress = deployed.contractInstance.address;
   let drawInProgress = false
 
+  const stringWalphContractAddress = walpheContractAddress
+
   const drawChecker = async function() {
     const balanceContract = await nodeProvider.addresses.getAddressesAddressBalance(walpheContractAddress)
-    console.log(walpheContractAddress+" - Balance contract is " + balanceContract.balanceHint )
+    console.log(stringWalphContractAddress+" "+ contractName+" - Balance contract is " + balanceContract.balanceHint )
 
-    const WalphState = WalphTimed.at(walpheContractAddress)
+    let WalphState
+    WalphState = WalphTimed.at(walpheContractAddress)
+    if (contractName.toLowerCase().includes("ayin") || contractName.toLowerCase().includes("alf"))
+      WalphState = WalphTimedToken.at(walpheContractAddress)
+
+
 
     const initialState = await WalphState.fetchState()
 
     const poolSize = initialState.fields.poolSize / initialState.fields.ticketPrice
     
-    console.log(walpheContractAddress + " - Next draw: "+ new Date(Number(initialState.fields.drawTimestamp)))
+    console.log(stringWalphContractAddress+" "+ contractName + " - Next draw: "+ new Date(Number(initialState.fields.drawTimestamp)))
     if (initialState.fields.drawTimestamp <= Date.now() || initialState.fields.numAttendees >= poolSize && !drawInProgress ){
         drawInProgress = true
 
@@ -58,13 +65,13 @@ async function draw(privKey: string, group: number, contractName: string) {
 
     const txDraw = await Draw.execute(wallet, {
       initialFields: { walphContract: walpheContractId},
-      attoAlphAmount: 10n + 8n * DUST_AMOUNT,
+      attoAlphAmount: 5n * DUST_AMOUNT,
     });
-    console.log(walpheContractAddress+" - "+"Draw tx: "+ txDraw.txId)
+    console.log(stringWalphContractAddress+" "+ contractName +" - "+"Draw tx: "+ txDraw.txId)
     await waitTxConfirmed(nodeProvider, txDraw.txId,1 ,10000 )
 
     drawInProgress = false
-    console.log(walpheContractAddress + " drawn")
+    console.log(stringWalphContractAddress+" "+ contractName + " drawn")
     
   }
 
@@ -77,7 +84,7 @@ drawChecker()
 }
 
 
-const networkToUse = "devnet";
+const networkToUse = "mainnet";
 //Select our network defined in alephium.config.ts
 const network = configuration.networks[networkToUse];
 
@@ -96,4 +103,7 @@ Array.from(Array(numberOfKeys).keys()).forEach((group) => {
   draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimed:BlitzOneDayOneAlph");
   draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimed:BlitzThreeDays");
   
+  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimedToken:BlitzThreeDaysAlf");
+  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimedToken:BlitzThreeDaysAyin");
+
 });
