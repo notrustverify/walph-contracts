@@ -7,36 +7,26 @@ import {
   SignerProvider,
   Contract,
   ONE_ALPH,
+  contractIdFromAddress,
+  binToHex,
 } from "@alephium/web3";
 import { PrivateKeyWallet } from "@alephium/web3-wallet";
 import configuration from "../alephium.config";
-import { Destroy, Walph, WalphTypes } from "../artifacts/ts";
+import {
+  Destroy,
+  Walph,
+  WalphTypes,
+  WalphTimed,
+  WalphTimedTypes,
+  DestroyBlitz,
+} from "../artifacts/ts";
 
-// The `TokenFaucetTypes.WithdrawEvent` is generated in the getting-started guide
-const events: WalphTypes.PoolCloseEvent[] = [];
-const subscribeOptions = {
-  // It will check for new events from the full node every `pollingInterval`
-  pollingInterval: 40000,
-  // The callback function will be called for each event
-  messageCallback: (event: WalphTypes.PoolCloseEvent): Promise<void> => {
-    events.push(event);
-    return Promise.resolve();
-  },
-  // This callback function will be called when an error occurs
-  errorCallback: (
-    error: any,
-    subscription: { unsubscribe: () => void }
-  ): Promise<void> => {
-    console.log(error);
-    subscription.unsubscribe();
-    return Promise.resolve();
-  },
-};
-
-
-async function destroy(privKey: string, group: number, contractName: string) {
-
-  Project.build();
+async function destroy(
+  privKey: string,
+  group: number,
+  contractName: string,
+  contractAddresses?: string
+) {
   const wallet = new PrivateKeyWallet({
     privateKey: privKey,
     keyType: undefined,
@@ -50,38 +40,68 @@ async function destroy(privKey: string, group: number, contractName: string) {
   );
   //Make sure it match your address group
   const accountGroup = group;
-
-  const deployed = deployments.getDeployedContractResult(
-    accountGroup,
-    contractName
-  );
-  const walpheContractId = deployed.contractInstance.contractId;
-  const walpheContractAddress = deployed.contractInstance.address;
-
-  try {
-    const balanceContract = await nodeProvider.addresses.getAddressesAddressBalance(walpheContractAddress)
-    console.log(walpheContractAddress+" - Balance contract is " + balanceContract.balanceHint )
-
-    const destroyTx = await Destroy.execute(wallet, {
-      initialFields: { walphContract: walpheContractId},
-      attoAlphAmount: ONE_ALPH + 5n * DUST_AMOUNT,
-    });
-    console.log("Wait for "+destroyTx.txId+" to destroy the contract ")
-
-    await waitTxConfirmed(nodeProvider,destroyTx.txId,1 , 1000)
-
-    console.log(walpheContractAddress + " destroyed")
- 
-  } catch (error) {
-    console.log("Contract "+walpheContractAddress+"not found, continue")
-    return
+  let deployed;
+  let walpheContractId;
+  let walpheContractAddress;
+  if (contractAddresses === undefined) {
+    deployed = deployments.getDeployedContractResult(
+      accountGroup,
+      contractName
+    );
+    walpheContractId = deployed.contractInstance.contractId;
+    walpheContractAddress = deployed.contractInstance.address;
   }
 
-    
+  console.log("Destroying " + contractName);
+
+  if (deployed !== undefined || contractAddresses !== undefined) {
+    if (contractAddresses !== undefined) {
+      walpheContractId = binToHex(contractIdFromAddress(contractAddress));
+      walpheContractAddress = contractAddress;
+    }
+
+    try {
+      const balanceContract =
+        await nodeProvider.addresses.getAddressesAddressBalance(
+          walpheContractAddress
+        );
+      console.log(
+        walpheContractAddress +
+          " - Balance contract is " +
+          balanceContract.balanceHint
+      );
+
+      let destroyTx;
+      if (contractName.includes("WalphTimed")) {
+        console.log("destroy blitz");
+        destroyTx = await DestroyBlitz.execute(wallet, {
+          initialFields: { walphContract: walpheContractId },
+          attoAlphAmount: 5n * DUST_AMOUNT,
+        });
+      } else if (contractName.includes("Walph")) {
+        destroyTx = await Destroy.execute(wallet, {
+          initialFields: { walphContract: walpheContractId },
+          attoAlphAmount: 5n * DUST_AMOUNT,
+        });
+      }
+
+      console.log("Wait for " + destroyTx.txId + " to destroy the contract ");
+
+      await waitTxConfirmed(nodeProvider, destroyTx.txId, 1, 1000);
+
+      console.log(walpheContractAddress + " destroyed");
+    } catch (error) {
+      console.error(error)
+      console.log("Contract " + walpheContractAddress + " not found, continue");
+    }
+  }
 }
 
+const networkToUse = process.argv.slice(2)[0];
+const group = parseInt(process.argv.slice(2)[1]);
+const contractAddress = process.argv.slice(2)[2];
 
-const networkToUse = "testnet";
+
 //Select our network defined in alephium.config.ts
 const network = configuration.networks[networkToUse];
 
@@ -91,15 +111,54 @@ const nodeProvider = new NodeProvider(network.nodeUrl);
 //Sometimes, it's convenient to setup a global NodeProvider for your project:
 web3.setCurrentNodeProvider(nodeProvider);
 
-const numberOfKeys = configuration.networks[networkToUse].privateKeys.length
+const numberOfKeys = configuration.networks[networkToUse].privateKeys.length;
 
+if (contractAddress !== undefined){
+destroy(
+  configuration.networks[networkToUse].privateKeys[group],
+  group,
+  "WalphTimed:BlitzOneDay",
+  contractAddress
+);
+
+}
+
+if (contractAddress === undefined){
 Array.from(Array(numberOfKeys).keys()).forEach((group) => {
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph50HodlAlf");
-  
-  destroy(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
-  destroy(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimed");
-  destroy(configuration.networks[networkToUse].privateKeys[group], group, "Walf");
-  destroy(configuration.networks[networkToUse].privateKeys[group], group, "Walph50HodlAlf");
 
-});
+  // destroy(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
+
+  
+  destroy(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimed:BlitzOneDay"
+  );
+  destroy(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimed:BlitzOneDayOneAlph"  );
+  destroy(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimed:BlitzThreeDays"
+  );
+  destroy(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimedToken:BlitzThreeDaysAlf"
+  );
+  destroy(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimedToken:BlitzThreeDaysAyin"
+  );
+
+  /*destroy(configuration.networks[networkToUse].privateKeys[group], group, "Walf");
+  destroy(configuration.networks[networkToUse].privateKeys[group], group, "Walph50HodlAlf");*/
+
+  
+
+})}

@@ -10,7 +10,8 @@ const deployWalph: DeployFunction<Settings> = async (
   deployer: Deployer
 ): Promise<void> => {
  
-  const alfContractId = (await mintToken(deployer.account.address, 2000n * 10n ** 9n)).contractId
+  //const alfContractId = (await mintToken(deployer.account.address, 2000n * 10n ** 9n)).contractId
+  const alfContractId = "66da610efb5129c062e88e5fd65fe810f31efd1597021b2edf887a4360fa0800"
   const tokenDecimal = 9n
 
   const poolSize = 83

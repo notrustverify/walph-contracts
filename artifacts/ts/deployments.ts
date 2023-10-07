@@ -10,6 +10,7 @@ import {
   WalphTimedToken,
   WalphTimedTokenInstance,
 } from ".";
+import { default as mainnetDeployments } from "../.deployments.mainnet.json";
 import { default as devnetDeployments } from "../.deployments.devnet.json";
 
 export type Deployments = {
@@ -19,7 +20,7 @@ export type Deployments = {
     WalphTimed_BlitzOneDayOneAlph: DeployContractExecutionResult<WalphTimedInstance>;
     WalphTimed_BlitzThreeDays: DeployContractExecutionResult<WalphTimedInstance>;
     WalphTimedToken_BlitzThreeDaysAlf: DeployContractExecutionResult<WalphTimedTokenInstance>;
-    WalphTimedToken_BlitzThreeDaysAyin: DeployContractExecutionResult<WalphTimedTokenInstance>;
+    WalphTimedToken_BlitzThreeDaysAyin?: DeployContractExecutionResult<WalphTimedTokenInstance>;
   };
 };
 
@@ -50,13 +51,16 @@ function toDeployments(json: any): Deployments {
           .address
       ),
     },
-    WalphTimedToken_BlitzThreeDaysAyin: {
-      ...json.contracts["WalphTimedToken:BlitzThreeDaysAyin"],
-      contractInstance: WalphTimedToken.at(
-        json.contracts["WalphTimedToken:BlitzThreeDaysAyin"].contractInstance
-          .address
-      ),
-    },
+    WalphTimedToken_BlitzThreeDaysAyin:
+      json.contracts["WalphTimedToken:BlitzThreeDaysAyin"] === undefined
+        ? undefined
+        : {
+            ...json.contracts["WalphTimedToken:BlitzThreeDaysAyin"],
+            contractInstance: WalphTimedToken.at(
+              json.contracts["WalphTimedToken:BlitzThreeDaysAyin"]
+                .contractInstance.address
+            ),
+          },
   };
   return {
     ...json,
@@ -68,7 +72,12 @@ export function loadDeployments(
   networkId: NetworkId,
   deployerAddress?: string
 ): Deployments {
-  const deployments = networkId === "devnet" ? devnetDeployments : undefined;
+  const deployments =
+    networkId === "mainnet"
+      ? mainnetDeployments
+      : networkId === "devnet"
+      ? devnetDeployments
+      : undefined;
   if (deployments === undefined) {
     throw Error("The contract has not been deployed to the " + networkId);
   }
