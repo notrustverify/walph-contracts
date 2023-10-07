@@ -11,28 +11,35 @@
   "infos": {
     "Buy": {
       "sourceFile": "buyTicket.ral",
-      "sourceCodeHash": "d3729ce19cca1f2d822b1f74cfa33fc7d58d2bf47130b8d2b1369e49af97ed26",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []
     },
     "BuyTicketToken": {
       "sourceFile": "buyTicket.ral",
-      "sourceCodeHash": "d3729ce19cca1f2d822b1f74cfa33fc7d58d2bf47130b8d2b1369e49af97ed26",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "BuyTimedWithToken": {
+      "sourceFile": "buyTicket.ral",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []
     },
     "BuyTimedWithoutToken": {
       "sourceFile": "buyTicket.ral",
-      "sourceCodeHash": "d3729ce19cca1f2d822b1f74cfa33fc7d58d2bf47130b8d2b1369e49af97ed26",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []
     },
     "BuyWithoutToken": {
       "sourceFile": "buyTicket.ral",
-      "sourceCodeHash": "d3729ce19cca1f2d822b1f74cfa33fc7d58d2bf47130b8d2b1369e49af97ed26",
+      "sourceCodeHash": "00e12245a5b2b093be840b31eac5b91a54fa038ea77867affa817b07a20dfb5c",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []
@@ -95,9 +102,16 @@
     },
     "WalphTimed": {
       "sourceFile": "walphTimed.ral",
-      "sourceCodeHash": "ece183d378a62ed13dcfe9e24107db9c218b7c3a9c8dd61aba187d6709344eaa",
-      "bytecodeDebugPatch": "=6-2=2-2+2a=3-1+b=3-1+4=3-1+d=3-1+6=2-2+bf=2-2+da=2-2+0c=2-2+9e=3-1+3=3-1+9=2-2+dc=3-1+04205=11-1+4=30+0016007e0207726e6420697320=966",
-      "codeHashDebug": "030dc44beb395eac832ed9d72b1b9e526d7a3b59c410d91b7284d0262d487690",
+      "sourceCodeHash": "8d7441be2f31c76fc8fd034882d0606e530b3daed908671a41a3a47e513adff2",
+      "bytecodeDebugPatch": "=6-2=2-2+2a=3-1+b=3-1+4=3-1+d=3-1+6=2-2+bf=1-1=2+a=2-3=2-1=2-1+a6=1+1bb=3-1+1=3-1+441f9=11-1+4=30+0016007e0207726e6420697320=942",
+      "codeHashDebug": "357d515107b7bec934715fb92984d3ab81344f7e4d8b712a15107e399316ba23",
+      "warnings": []
+    },
+    "WalphTimedToken": {
+      "sourceFile": "walphTimedToken.ral",
+      "sourceCodeHash": "f8fd7f5ce8fa8d691c4b51140bb3045e06181256862d750ddfdd82ac17024093",
+      "bytecodeDebugPatch": "=6-2=2-1+2=4-1+7=2-1=1+0=3-1+9=2-2+d2=2-2+db=2-1+0=3-2+5=1-2=1+1fc=3-1+1=3-1+7=2+3a=2+4f=11-1+4=30+0016007e0207726e6420697320=1114",
+      "codeHashDebug": "a4be006787d53653d252eda4baeecb407e1137fc30f83e715e742e8edf7db863",
       "warnings": []
     },
     "Wayin": {
