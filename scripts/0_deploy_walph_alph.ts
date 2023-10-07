@@ -15,7 +15,7 @@ const deployWalph: DeployFunction<Settings> = async (
   const poolSize = 85
 
   let ticketPrice = 5
-  let repeatEvery = 300*1000
+  let repeatEvery = 86400*1000
   let drawTimestamp = BigInt(Date.now()+repeatEvery)
   const resultTimedWalph = await deployer.deployContract(WalphTimed, {
     // The initial states of the faucet contract
