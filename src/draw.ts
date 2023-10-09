@@ -7,15 +7,22 @@ import {
   SignerProvider,
   Contract,
   ONE_ALPH,
+  sleep,
 } from "@alephium/web3";
 import { PrivateKeyWallet } from "@alephium/web3-wallet";
 import configuration from "../alephium.config";
-import { Destroy, Draw, Walph, WalphTimed, WalphTimedTypes, WalphTimedToken, WithdrawFees } from "../artifacts/ts";
-
-// The `TokenFaucetTypes.WithdrawEvent` is generated in the getting-started guide
+import {
+  Destroy,
+  Draw,
+  Walph,
+  WalphTimed,
+  WalphTimedTypes,
+  WalphTimedToken,
+  WithdrawFees,
+} from "../artifacts/ts";
+import * as fetchRetry from "fetch-retry";
 
 async function draw(privKey: string, group: number, contractName: string) {
-
   const wallet = new PrivateKeyWallet({
     privateKey: privKey,
     keyType: undefined,
@@ -32,78 +39,128 @@ async function draw(privKey: string, group: number, contractName: string) {
   const deployed = deployments.getDeployedContractResult(
     accountGroup,
     contractName
-  )
+  );
   const walpheContractId = deployed.contractInstance.contractId;
   const walpheContractAddress = deployed.contractInstance.address;
-  let drawInProgress = false
+  let drawInProgress = false;
 
-  const stringWalphContractAddress = walpheContractAddress
+  const stringWalphVerbose = walpheContractAddress + " " + contractName + " ";
 
-  const drawChecker = async function() {
-    const balanceContract = await nodeProvider.addresses.getAddressesAddressBalance(walpheContractAddress)
-    console.log(stringWalphContractAddress+" "+ contractName+" - Balance contract is " + balanceContract.balanceHint )
+  const drawChecker = async function () {
+    let drawTimestamp = 0;
+    try {
+      const balanceContract =
+        await nodeProvider.addresses.getAddressesAddressBalance(
+          walpheContractAddress
+        );
+      console.log(
+        stringWalphVerbose +
+          " - Balance contract is " +
+          balanceContract.balanceHint
+      );
 
-    let WalphState
-    WalphState = WalphTimed.at(walpheContractAddress)
-    if (contractName.toLowerCase().includes("ayin") || contractName.toLowerCase().includes("alf"))
-      WalphState = WalphTimedToken.at(walpheContractAddress)
+      let WalphState;
+      WalphState = WalphTimed.at(walpheContractAddress);
+      if (
+        contractName.toLowerCase().includes("ayin") ||
+        contractName.toLowerCase().includes("alf")
+      )
+        WalphState = WalphTimedToken.at(walpheContractAddress);
 
+      const initialState = await WalphState.fetchState();
 
+      drawTimestamp = Number(initialState.fields.drawTimestamp);
+      const poolSize =
+        initialState.fields.poolSize / initialState.fields.ticketPrice;
 
-    const initialState = await WalphState.fetchState()
+      console.log(
+        stringWalphVerbose + " - Next draw: " + new Date(drawTimestamp)
+      );
 
-    const poolSize = initialState.fields.poolSize / initialState.fields.ticketPrice
-    
-    console.log(stringWalphContractAddress+" "+ contractName + " - Next draw: "+ new Date(Number(initialState.fields.drawTimestamp)))
-    if (initialState.fields.drawTimestamp <= Date.now() || initialState.fields.numAttendees >= poolSize && !drawInProgress ){
-        drawInProgress = true
+      if (
+        drawTimestamp <= Date.now() ||
+        (initialState.fields.numAttendees >= poolSize && !drawInProgress)
+      ) {
+        drawInProgress = true;
 
-      if (initialState.fields.numAttendees >= poolSize)
-        console.log("drawn because pool full, numAttendees "+ initialState.fields.numAttendees)
-      else
-        console.log("drawn because timed out")
+        if (initialState.fields.numAttendees >= poolSize)
+          console.log(
+            stringWalphVerbose +
+              "drawn because pool full, numAttendees " +
+              initialState.fields.numAttendees
+          );
+        else console.log(stringWalphVerbose + "drawn because timed out");
 
-    const txDraw = await Draw.execute(wallet, {
-      initialFields: { walphContract: walpheContractId},
-      attoAlphAmount: 5n * DUST_AMOUNT,
-    });
-    console.log(stringWalphContractAddress+" "+ contractName +" - "+"Draw tx: "+ txDraw.txId)
-    await waitTxConfirmed(nodeProvider, txDraw.txId,1 ,10000 )
+        const txDraw = await Draw.execute(wallet, {
+          initialFields: { walphContract: walpheContractId },
+          attoAlphAmount: 5n * DUST_AMOUNT,
+        });
+        console.log(stringWalphVerbose + " - " + "Draw tx: " + txDraw.txId);
+        await waitTxConfirmed(nodeProvider, txDraw.txId, 1, 10000);
 
-    drawInProgress = false
-    console.log(stringWalphContractAddress+" "+ contractName + " drawn")
-    
-  }
+        drawInProgress = false;
+        console.log(stringWalphVerbose + " drawn");
+      }
+    } catch (err) {
+      console.log(err);
+      await sleep(30 * 1000);
+    }
 
-    setTimeout(drawChecker, Number(initialState.fields.drawTimestamp) - Date.now());
+    setTimeout(drawChecker, drawTimestamp - Date.now());
+  };
+
+  drawChecker();
 }
 
-drawChecker()
+const retryFetch = fetchRetry.default(fetch, {
+  retries: 10,
+  retryDelay: 1000,
+});
 
-    
-}
-
-
-const networkToUse = "mainnet";
+let networkToUse = process.argv.slice(2)[0];
+if (networkToUse === undefined) networkToUse = "mainnet";
 //Select our network defined in alephium.config.ts
 const network = configuration.networks[networkToUse];
 
 //NodeProvider is an abstraction of a connection to the Alephium network
-const nodeProvider = new NodeProvider(network.nodeUrl);
+const nodeProvider = new NodeProvider(
+  configuration.networks[networkToUse].nodeUrl,
+  undefined,
+  retryFetch
+);
 
 //Sometimes, it's convenient to setup a global NodeProvider for your project:
 web3.setCurrentNodeProvider(nodeProvider);
 
-const numberOfKeys = configuration.networks[networkToUse].privateKeys.length
+const numberOfKeys = configuration.networks[networkToUse].privateKeys.length;
 
 Array.from(Array(numberOfKeys).keys()).forEach((group) => {
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph50HodlAlf");
-  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimed:BlitzOneDay");
-  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimed:BlitzOneDayOneAlph");
-  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimed:BlitzThreeDays");
-  
-  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimedToken:BlitzThreeDaysAlf");
-  draw(configuration.networks[networkToUse].privateKeys[group], group, "WalphTimedToken:BlitzThreeDaysAyin");
+  draw(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimed:BlitzOneDay"
+  );
+  draw(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimed:BlitzOneDayOneAlph"
+  );
+  draw(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimed:BlitzThreeDays"
+  );
 
+  draw(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimedToken:BlitzThreeDaysAlf"
+  );
+  draw(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimedToken:BlitzThreeDaysAyin"
+  );
 });

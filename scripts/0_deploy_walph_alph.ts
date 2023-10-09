@@ -28,7 +28,7 @@ const deployWalph: DeployFunction<Settings> = async (
         balance: 0n,
         feesBalance: 0n,
         numAttendees: 0n,
-        drawTimestamp: drawTimestamp,
+        drawTimestamp: 0n,
         repeatEvery: BigInt(repeatEvery),
         attendees: Array(poolSize).fill(ZERO_ADDRESS) as WalphTimedTypes.Fields["attendees"],
         lastWinner: ZERO_ADDRESS
@@ -55,7 +55,7 @@ const deployWalph: DeployFunction<Settings> = async (
         balance: 0n,
         feesBalance: 0n,
         numAttendees: 0n,
-        drawTimestamp: drawTimestamp,
+        drawTimestamp: 0n,
         repeatEvery: BigInt(repeatEvery),
         attendees: Array(poolSize).fill(ZERO_ADDRESS) as WalphTimedTypes.Fields["attendees"],
         lastWinner: ZERO_ADDRESS
@@ -82,7 +82,7 @@ const deployWalph: DeployFunction<Settings> = async (
         balance: 0n,
         feesBalance: 0n,
         numAttendees: 0n,
-        drawTimestamp: drawTimestamp,
+        drawTimestamp: 1n,
         repeatEvery: BigInt(repeatEvery),
         attendees: Array(poolSize).fill(ZERO_ADDRESS) as WalphTimedTypes.Fields["attendees"],
         lastWinner: ZERO_ADDRESS

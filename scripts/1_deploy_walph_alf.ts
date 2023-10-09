@@ -32,7 +32,7 @@ const deployWalph: DeployFunction<Settings> = async (
       feesBalance: 0n,
       dustBalance: 0n,
       numAttendees: 0n,
-      drawTimestamp: drawTimestamp,
+      drawTimestamp: 0n,
       repeatEvery: BigInt(repeatEvery),
       attendees: Array(poolSize).fill(ZERO_ADDRESS) as WalphTimedTokenTypes.Fields["attendees"],
       lastWinner: ZERO_ADDRESS
