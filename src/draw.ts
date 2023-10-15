@@ -140,6 +140,13 @@ web3.setCurrentNodeProvider(nodeProvider);
 
 const numberOfKeys = configuration.networks[networkToUse].privateKeys.length;
 
+//only deployed in group 0
+draw(
+  configuration.networks[networkToUse].privateKeys[0],
+  0,
+  "WalphTimed:BlitzMexc"
+);
+
 Array.from(Array(numberOfKeys).keys()).forEach((group) => {
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph50HodlAlf");
@@ -168,11 +175,5 @@ Array.from(Array(numberOfKeys).keys()).forEach((group) => {
     configuration.networks[networkToUse].privateKeys[group],
     group,
     "WalphTimedToken:BlitzThreeDaysAyin"
-  );
-
-  draw(
-    configuration.networks[networkToUse].privateKeys[group],
-    group,
-    "WalphTimed:BlitzMexc"
   );
 });
