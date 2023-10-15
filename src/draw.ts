@@ -106,7 +106,13 @@ async function draw(privKey: string, group: number, contractName: string) {
       await sleep(30 * 1000);
     }
 
-    setTimeout(drawChecker, drawTimestamp - Date.now());
+    // setTimeout only accept 32bit value
+    let timeUntilDraw = drawTimestamp - Date.now()
+    if(timeUntilDraw > 2**31)
+      timeUntilDraw = (2**31)-1
+    
+    setTimeout(drawChecker, timeUntilDraw);
+   
   };
 
   drawChecker();
@@ -162,5 +168,11 @@ Array.from(Array(numberOfKeys).keys()).forEach((group) => {
     configuration.networks[networkToUse].privateKeys[group],
     group,
     "WalphTimedToken:BlitzThreeDaysAyin"
+  );
+
+  draw(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimed:BlitzMexc"
   );
 });

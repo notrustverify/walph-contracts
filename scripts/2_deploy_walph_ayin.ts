@@ -9,7 +9,7 @@ import { mintToken, transfer } from '@alephium/web3-test'
 const deployWalph: DeployFunction<Settings> = async (
   deployer: Deployer
 ): Promise<void> => {
- 
+ /*
   //const tokenContractId = (await mintToken(deployer.account.address, 2000n * 10n ** 18n)).contractId
   const tokenContractId = "1a281053ba8601a658368594da034c2e99a0fb951b86498d05e76aedfe666800"
   const tokenDecimal = 18n
@@ -44,7 +44,7 @@ const deployWalph: DeployFunction<Settings> = async (
   console.log("First draw in: "+ new Date(Number(drawTimestamp)))
   console.log('Walph Ayin Timed 3d contract id: ' + resultTimedThreeDaysWalph.contractInstance.contractId)
   console.log('Walph Ayin Timed 3d contract address: ' + resultTimedThreeDaysWalph.contractInstance.address)
-
+*/
 }
 
 export default deployWalph
