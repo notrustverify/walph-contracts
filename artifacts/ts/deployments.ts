@@ -21,6 +21,10 @@ export type Deployments = {
     WalphTimed_BlitzThreeDays: DeployContractExecutionResult<WalphTimedInstance>;
     WalphTimedToken_BlitzThreeDaysAlf: DeployContractExecutionResult<WalphTimedTokenInstance>;
     WalphTimedToken_BlitzThreeDaysAyin: DeployContractExecutionResult<WalphTimedTokenInstance>;
+    WalphTimed_BlitzMexc: DeployContractExecutionResult<WalphTimedInstance>;
+    WalphTimed_BlitzMexcFiveDays: DeployContractExecutionResult<WalphTimedInstance>;
+    WalphTimed_BlitzMexcTenDays: DeployContractExecutionResult<WalphTimedInstance>;
+    WalphTimed_BlitzMexcTwentyDays: DeployContractExecutionResult<WalphTimedInstance>;
   };
 };
 
@@ -55,6 +59,31 @@ function toDeployments(json: any): Deployments {
       ...json.contracts["WalphTimedToken:BlitzThreeDaysAyin"],
       contractInstance: WalphTimedToken.at(
         json.contracts["WalphTimedToken:BlitzThreeDaysAyin"].contractInstance
+          .address
+      ),
+    },
+    WalphTimed_BlitzMexc: {
+      ...json.contracts["WalphTimed:BlitzMexc"],
+      contractInstance: WalphTimed.at(
+        json.contracts["WalphTimed:BlitzMexc"].contractInstance.address
+      ),
+    },
+    WalphTimed_BlitzMexcFiveDays: {
+      ...json.contracts["WalphTimed:BlitzMexcFiveDays"],
+      contractInstance: WalphTimed.at(
+        json.contracts["WalphTimed:BlitzMexcFiveDays"].contractInstance.address
+      ),
+    },
+    WalphTimed_BlitzMexcTenDays: {
+      ...json.contracts["WalphTimed:BlitzMexcTenDays"],
+      contractInstance: WalphTimed.at(
+        json.contracts["WalphTimed:BlitzMexcTenDays"].contractInstance.address
+      ),
+    },
+    WalphTimed_BlitzMexcTwentyDays: {
+      ...json.contracts["WalphTimed:BlitzMexcTwentyDays"],
+      contractInstance: WalphTimed.at(
+        json.contracts["WalphTimed:BlitzMexcTwentyDays"].contractInstance
           .address
       ),
     },

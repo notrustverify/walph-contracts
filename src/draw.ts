@@ -106,7 +106,13 @@ async function draw(privKey: string, group: number, contractName: string) {
       await sleep(30 * 1000);
     }
 
-    setTimeout(drawChecker, drawTimestamp - Date.now());
+    // setTimeout only accept 32bit value
+    let timeUntilDraw = drawTimestamp - Date.now()
+    if(timeUntilDraw > 2**31)
+      timeUntilDraw = (2**31)-1
+    
+    setTimeout(drawChecker, timeUntilDraw);
+   
   };
 
   drawChecker();
@@ -133,6 +139,29 @@ const nodeProvider = new NodeProvider(
 web3.setCurrentNodeProvider(nodeProvider);
 
 const numberOfKeys = configuration.networks[networkToUse].privateKeys.length;
+
+//only deployed in group 0
+draw(
+  configuration.networks[networkToUse].privateKeys[0],
+  0,
+  "WalphTimed:BlitzMexc"
+);
+draw(
+  configuration.networks[networkToUse].privateKeys[0],
+  0,
+  "WalphTimed:BlitzMexcFiveDays"
+);
+draw(
+  configuration.networks[networkToUse].privateKeys[0],
+  0,
+  "WalphTimed:BlitzMexcTenDays"
+);
+draw(
+  configuration.networks[networkToUse].privateKeys[0],
+  0,
+  "WalphTimed:BlitzMexcTwentyDays"
+);
+
 
 Array.from(Array(numberOfKeys).keys()).forEach((group) => {
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
