@@ -146,6 +146,22 @@ draw(
   0,
   "WalphTimed:BlitzMexc"
 );
+draw(
+  configuration.networks[networkToUse].privateKeys[0],
+  0,
+  "WalphTimed:BlitzMexcFiveDays"
+);
+draw(
+  configuration.networks[networkToUse].privateKeys[0],
+  0,
+  "WalphTimed:BlitzMexcTenDays"
+);
+draw(
+  configuration.networks[networkToUse].privateKeys[0],
+  0,
+  "WalphTimed:BlitzMexcTwentyDays"
+);
+
 
 Array.from(Array(numberOfKeys).keys()).forEach((group) => {
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
