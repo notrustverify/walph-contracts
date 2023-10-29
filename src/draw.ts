@@ -163,7 +163,7 @@ draw(
 );
 
 
-Array.from(Array(numberOfKeys).keys()).forEach((group) => {
+ const group = 0
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
   //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph50HodlAlf");
   draw(
@@ -192,4 +192,3 @@ Array.from(Array(numberOfKeys).keys()).forEach((group) => {
     group,
     "WalphTimedToken:BlitzThreeDaysAyin"
   );
-});
