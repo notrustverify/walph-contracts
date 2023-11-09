@@ -126,7 +126,7 @@ if (deployer.account.group === 0){
   console.log('Walph Timed Mexc contract address: ' + resultTimedMexc.contractInstance.address)
 }
 
-*/
+
 
 if (deployer.account.group === 0){
 
@@ -220,7 +220,7 @@ if (deployer.account.group === 0){
 }
 
 
-
+*/
 
 }
 
