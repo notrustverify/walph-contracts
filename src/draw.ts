@@ -192,3 +192,16 @@ draw(
     group,
     "WalphTimedToken:BlitzThreeDaysAyin"
   );
+
+  draw(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimedToken:BlitzThreeDaysUSDT"
+  );
+
+ draw(
+    configuration.networks[networkToUse].privateKeys[group],
+    group,
+    "WalphTimedToken:BlitzThreeDaysUSDC"
+  );
+
