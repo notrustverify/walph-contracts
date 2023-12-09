@@ -63,7 +63,9 @@ async function draw(privKey: string, group: number, contractName: string) {
       WalphState = WalphTimed.at(walpheContractAddress);
       if (
         contractName.toLowerCase().includes("ayin") ||
-        contractName.toLowerCase().includes("alf")
+        contractName.toLowerCase().includes("alf") ||
+        contractName.toLowerCase().includes("ngu") ||
+        contractName.toLowerCase().includes("usd")
       )
         WalphState = WalphTimedToken.at(walpheContractAddress);
 
@@ -107,12 +109,10 @@ async function draw(privKey: string, group: number, contractName: string) {
     }
 
     // setTimeout only accept 32bit value
-    let timeUntilDraw = drawTimestamp - Date.now()
-    if(timeUntilDraw > 2**31)
-      timeUntilDraw = (2**31)-1
-    
+    let timeUntilDraw = drawTimestamp - Date.now();
+    if (timeUntilDraw > 2 ** 31) timeUntilDraw = 2 ** 31 - 1;
+
     setTimeout(drawChecker, timeUntilDraw);
-   
   };
 
   drawChecker();
@@ -140,68 +140,48 @@ web3.setCurrentNodeProvider(nodeProvider);
 
 const numberOfKeys = configuration.networks[networkToUse].privateKeys.length;
 
-//only deployed in group 0
+const group = 1;
 draw(
-  configuration.networks[networkToUse].privateKeys[0],
-  0,
-  "WalphTimed:BlitzMexc"
+  configuration.networks[networkToUse].privateKeys[group],
+  group,
+  "WalphTimed:BlitzOneDay"
 );
 draw(
-  configuration.networks[networkToUse].privateKeys[0],
-  0,
-  "WalphTimed:BlitzMexcFiveDays"
+  configuration.networks[networkToUse].privateKeys[group],
+  group,
+  "WalphTimed:BlitzOneDayOneAlph"
 );
 draw(
-  configuration.networks[networkToUse].privateKeys[0],
-  0,
-  "WalphTimed:BlitzMexcTenDays"
+  configuration.networks[networkToUse].privateKeys[group],
+  group,
+  "WalphTimed:BlitzThreeDays"
+);
+
+draw(
+  configuration.networks[networkToUse].privateKeys[group],
+  group,
+  "WalphTimedToken:BlitzThreeDaysAlf"
 );
 draw(
-  configuration.networks[networkToUse].privateKeys[0],
-  0,
-  "WalphTimed:BlitzMexcTwentyDays"
+  configuration.networks[networkToUse].privateKeys[group],
+  group,
+  "WalphTimedToken:BlitzThreeDaysAyin"
 );
 
+draw(
+  configuration.networks[networkToUse].privateKeys[group],
+  group,
+  "WalphTimedToken:BlitzThreeDaysUSDT"
+);
 
- const group = 0
-  //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph");
-  //distribute(configuration.networks[networkToUse].privateKeys[group], group, "Walph50HodlAlf");
-  draw(
-    configuration.networks[networkToUse].privateKeys[group],
-    group,
-    "WalphTimed:BlitzOneDay"
-  );
-  draw(
-    configuration.networks[networkToUse].privateKeys[group],
-    group,
-    "WalphTimed:BlitzOneDayOneAlph"
-  );
-  draw(
-    configuration.networks[networkToUse].privateKeys[group],
-    group,
-    "WalphTimed:BlitzThreeDays"
-  );
+draw(
+  configuration.networks[networkToUse].privateKeys[group],
+  group,
+  "WalphTimedToken:BlitzThreeDaysNgu"
+);
 
-  draw(
-    configuration.networks[networkToUse].privateKeys[group],
-    group,
-    "WalphTimedToken:BlitzThreeDaysAlf"
-  );
-  draw(
-    configuration.networks[networkToUse].privateKeys[group],
-    group,
-    "WalphTimedToken:BlitzThreeDaysAyin"
-  );
-
-  draw(
-    configuration.networks[networkToUse].privateKeys[group],
-    group,
-    "WalphTimedToken:BlitzThreeDaysUSDT"
-  );
-
- draw(
-    configuration.networks[networkToUse].privateKeys[group],
-    group,
-    "WalphTimedToken:BlitzThreeDaysUSDC"
-  );
-
+draw(
+  configuration.networks[networkToUse].privateKeys[group],
+  group,
+  "WalphTimedToken:BlitzFiveDaysNgu"
+);
